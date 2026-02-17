@@ -122,7 +122,7 @@ header {
 
 .chat-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-accent-warm) #173f4c;
+  scrollbar-color: #6d95a1 #e5edf0;
 }
 
 .chat-scrollbar::-webkit-scrollbar {
@@ -130,22 +130,18 @@ header {
 }
 
 .chat-scrollbar::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, #173f4c 0%, #1b4654 100%);
-  border-left: 1px solid var(--color-border);
+  background: linear-gradient(180deg, #edf3f5 0%, #e3ebee 100%);
+  border-left: 1px solid #c4d4da;
 }
 
 .chat-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    var(--color-accent) 0%,
-    var(--color-accent-warm) 100%
-  );
-  border: 2px solid #173f4c;
+  background: linear-gradient(180deg, #7fa4af 0%, #557d89 100%);
+  border: 2px solid #e5edf0;
   border-radius: 999px;
 }
 
 .chat-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ffe3b2 0%, #e48f73 100%);
+  background: linear-gradient(180deg, #8eb2bd 0%, #5d8895 100%);
 }
 
 .feature-grid article:nth-child(2n),
