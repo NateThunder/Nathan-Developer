@@ -20,15 +20,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 ## AI Assistant Setup
 
-The floating website assistant uses `app/api/agent/route.ts` and requires an OpenAI API key.
+The floating website assistant uses `app/api/agent/route.ts` and supports OpenAI and Groq.
 
 Set environment variables in `.env.local`:
 
 ```bash
-OPENAI_API_KEY=your_api_key_here
-# optional
-OPENAI_MODEL=gpt-4.1-mini
+# openai | groq | auto
+AGENT_PROVIDER=auto
+
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-5-mini
+
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=llama-3.1-8b-instant
 ```
+
+Notes:
+- `AGENT_PROVIDER=auto` prefers OpenAI when available, then Groq.
+- If OpenAI returns `insufficient_quota` and Groq is configured, the route falls back to Groq automatically.
 
 You can start by copying `.env.example` to `.env.local`.
 

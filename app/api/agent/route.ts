@@ -36,6 +36,29 @@ type RateBucket = {
   resetAt: number;
 };
 
+type Provider = "openai" | "groq";
+type ProviderMode = Provider | "auto";
+
+type ToolDefinition = {
+  name: string;
+  description: string;
+  parameters: Record<string, unknown>;
+};
+
+type GroqToolCall = {
+  id?: string;
+  function?: {
+    name?: string;
+    arguments?: string;
+  };
+};
+
+type ProviderResult = {
+  ok: boolean;
+  reply?: string;
+  error?: string;
+};
+
 const CONTACT = {
   email: "hello@studio.com",
   phone: "+44 7846 677463",
@@ -87,9 +110,13 @@ Style rules:
 - If uncertain, say what is known and suggest booking a call.
 `;
 
-const MODEL = process.env.OPENAI_MODEL ?? "gpt-4.1-mini";
+const PROVIDER_MODE: ProviderMode = "groq";
+const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-5-mini";
+const GROQ_MODEL = process.env.GROQ_MODEL ?? "llama-3.1-8b-instant";
 const MAX_MESSAGES = 14;
 const MAX_CHARS_PER_MESSAGE = 1200;
+const MAX_OUTPUT_TOKENS = 420;
+const MAX_TOOL_ROUNDS = 4;
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 20;
@@ -100,6 +127,59 @@ const quoteSubmissions: Array<{
   payload: Required<Pick<QuoteArgs, "name" | "email">> &
     Omit<QuoteArgs, "name" | "email">;
 }> = [];
+
+const TOOL_DEFINITIONS: ToolDefinition[] = [
+  {
+    name: "get_services",
+    description: "Get studio services and the fastest way to start a project.",
+    parameters: {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "estimate_price_range",
+    description:
+      "Estimate directional project price range and timeline in GBP based on scope.",
+    parameters: {
+      type: "object",
+      properties: {
+        projectType: { type: "string" },
+        pageCount: { type: "number" },
+        includesCms: { type: "boolean" },
+        includesBranding: { type: "boolean" },
+        urgency: { type: "string", enum: ["normal", "fast", "rush"] },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "get_booking_details",
+    description: "Return email, phone, and direct call-booking instructions.",
+    parameters: {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "submit_quote_request",
+    description: "Capture quote request details. Requires at least name and email.",
+    parameters: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        email: { type: "string" },
+        organization: { type: "string" },
+        projectType: { type: "string" },
+        timeline: { type: "string" },
+        notes: { type: "string" },
+      },
+      additionalProperties: false,
+    },
+  },
+];
 
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -294,7 +374,27 @@ function runTool(name: string, args: unknown) {
   return { error: `Unknown tool: ${name}` };
 }
 
-function extractToolCalls(responseJson: unknown): Array<{
+function buildResponsesTools() {
+  return TOOL_DEFINITIONS.map((tool) => ({
+    type: "function",
+    name: tool.name,
+    description: tool.description,
+    parameters: tool.parameters,
+  }));
+}
+
+function buildChatTools() {
+  return TOOL_DEFINITIONS.map((tool) => ({
+    type: "function",
+    function: {
+      name: tool.name,
+      description: tool.description,
+      parameters: tool.parameters,
+    },
+  }));
+}
+
+function extractResponseToolCalls(responseJson: unknown): Array<{
   call_id: string;
   name: string;
   arguments: string;
@@ -332,7 +432,7 @@ function extractToolCalls(responseJson: unknown): Array<{
     .filter((call) => call.call_id && call.name);
 }
 
-function extractOutputText(responseJson: unknown): string {
+function extractResponseOutputText(responseJson: unknown): string {
   if (!responseJson || typeof responseJson !== "object") {
     return "";
   }
@@ -377,7 +477,110 @@ function extractOutputText(responseJson: unknown): string {
   return "";
 }
 
-async function callOpenAI(payload: Record<string, unknown>) {
+function extractGroqChoiceMessage(responseJson: unknown): {
+  content?: unknown;
+  tool_calls?: unknown;
+} | null {
+  if (!responseJson || typeof responseJson !== "object") {
+    return null;
+  }
+
+  const choices = (responseJson as { choices?: unknown }).choices;
+  if (!Array.isArray(choices) || !choices.length) {
+    return null;
+  }
+
+  const first = choices[0];
+  if (!first || typeof first !== "object") {
+    return null;
+  }
+
+  const message = (first as { message?: unknown }).message;
+  if (!message || typeof message !== "object") {
+    return null;
+  }
+
+  return message as { content?: unknown; tool_calls?: unknown };
+}
+
+function extractGroqMessageText(message: { content?: unknown }): string {
+  if (typeof message.content === "string" && message.content.trim()) {
+    return message.content.trim();
+  }
+
+  return "";
+}
+
+function extractGroqToolCalls(message: { tool_calls?: unknown }): Array<{
+  id: string;
+  name: string;
+  arguments: string;
+}> {
+  if (!Array.isArray(message.tool_calls)) {
+    return [];
+  }
+
+  return (message.tool_calls as GroqToolCall[])
+    .map((call) => ({
+      id: call.id ?? "",
+      name: call.function?.name ?? "",
+      arguments: call.function?.arguments ?? "{}",
+    }))
+    .filter((call) => call.id && call.name);
+}
+
+function getProviderMode(): ProviderMode {
+  if (PROVIDER_MODE === "groq") {
+    return "groq";
+  }
+  if (PROVIDER_MODE === "auto") {
+    return "auto";
+  }
+  return "openai";
+}
+
+function resolveProvider(mode: ProviderMode): Provider | null {
+  const hasOpenAI = Boolean(process.env.OPENAI_API_KEY);
+  const hasGroq = Boolean(process.env.GROQ_API_KEY);
+
+  if (mode === "openai") {
+    return hasOpenAI ? "openai" : null;
+  }
+
+  if (mode === "groq") {
+    return hasGroq ? "groq" : null;
+  }
+
+  if (hasOpenAI) {
+    return "openai";
+  }
+  if (hasGroq) {
+    return "groq";
+  }
+
+  return null;
+}
+
+function looksLikeInsufficientQuota(error: string): boolean {
+  const normalized = error.toLowerCase();
+  return (
+    normalized.includes("insufficient_quota") ||
+    normalized.includes("exceeded your current quota")
+  );
+}
+
+function looksLikeOpenAIAuthError(error: string): boolean {
+  const normalized = error.toLowerCase();
+  return (
+    normalized.includes("invalid_issuer") ||
+    normalized.includes("invalid api key") ||
+    normalized.includes("invalid_api_key") ||
+    normalized.includes("authentication token is not from a valid issuer") ||
+    normalized.includes("openai api error (401)")
+  );
+}
+
+async function callOpenAIResponses(payload: Record<string, unknown>) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return {
@@ -400,7 +603,7 @@ async function callOpenAI(payload: Record<string, unknown>) {
     const raw = await res.text();
     return {
       ok: false as const,
-      error: `OpenAI API error (${res.status}): ${raw.slice(0, 400)}`,
+      error: `OpenAI API error (${res.status}): ${raw.slice(0, 500)}`,
     };
   }
 
@@ -408,13 +611,202 @@ async function callOpenAI(payload: Record<string, unknown>) {
   return { ok: true as const, json };
 }
 
+async function callGroqChatCompletions(payload: Record<string, unknown>) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    return {
+      ok: false as const,
+      error:
+        "Missing GROQ_API_KEY. Set it in your environment to enable Groq for the chat agent.",
+    };
+  }
+
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const raw = await res.text();
+    return {
+      ok: false as const,
+      error: `Groq API error (${res.status}): ${raw.slice(0, 500)}`,
+    };
+  }
+
+  const json = (await res.json()) as Record<string, unknown>;
+  return { ok: true as const, json };
+}
+
+async function generateWithOpenAI(transcript: string): Promise<ProviderResult> {
+  const tools = buildResponsesTools();
+  const input = [
+    {
+      role: "user",
+      content: [{ type: "input_text", text: transcript }],
+    },
+  ];
+
+  const first = await callOpenAIResponses({
+    model: OPENAI_MODEL,
+    instructions: SYSTEM_PROMPT,
+    input,
+    tools,
+    tool_choice: "auto",
+    max_output_tokens: MAX_OUTPUT_TOKENS,
+  });
+
+  if (!first.ok) {
+    return { ok: false, error: first.error };
+  }
+
+  let responseJson = first.json;
+
+  for (let i = 0; i < MAX_TOOL_ROUNDS; i += 1) {
+    const calls = extractResponseToolCalls(responseJson);
+    if (!calls.length) {
+      break;
+    }
+
+    const toolOutputs = calls.map((call) => {
+      let parsedArgs: unknown = {};
+      try {
+        parsedArgs = JSON.parse(call.arguments || "{}");
+      } catch {
+        parsedArgs = {};
+      }
+
+      const output = runTool(call.name, parsedArgs);
+      return {
+        type: "function_call_output",
+        call_id: call.call_id,
+        output: JSON.stringify(output),
+      };
+    });
+
+    const followUp = await callOpenAIResponses({
+      model: OPENAI_MODEL,
+      instructions: SYSTEM_PROMPT,
+      previous_response_id: (responseJson as { id?: unknown }).id,
+      input: toolOutputs,
+      tools,
+      tool_choice: "auto",
+      max_output_tokens: MAX_OUTPUT_TOKENS,
+    });
+
+    if (!followUp.ok) {
+      return { ok: false, error: followUp.error };
+    }
+
+    responseJson = followUp.json;
+  }
+
+  const reply =
+    extractResponseOutputText(responseJson) ||
+    "I can help with services, pricing, and next steps. Tell me your project type, timeline, and goals.";
+
+  return { ok: true, reply };
+}
+
+async function generateWithGroq(transcript: string): Promise<ProviderResult> {
+  const tools = buildChatTools();
+  const messages: Array<Record<string, unknown>> = [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: transcript },
+  ];
+
+  for (let i = 0; i < MAX_TOOL_ROUNDS; i += 1) {
+    const step = await callGroqChatCompletions({
+      model: GROQ_MODEL,
+      messages,
+      tools,
+      tool_choice: "auto",
+      max_completion_tokens: MAX_OUTPUT_TOKENS,
+    });
+
+    if (!step.ok) {
+      return { ok: false, error: step.error };
+    }
+
+    const message = extractGroqChoiceMessage(step.json);
+    if (!message) {
+      return { ok: false, error: "Groq API error: missing assistant message." };
+    }
+
+    const assistantText = extractGroqMessageText(message);
+    const toolCalls = extractGroqToolCalls(message);
+
+    messages.push({
+      role: "assistant",
+      content: assistantText,
+      ...(Array.isArray(message.tool_calls) && message.tool_calls.length
+        ? { tool_calls: message.tool_calls }
+        : {}),
+    });
+
+    if (!toolCalls.length) {
+      return {
+        ok: true,
+        reply:
+          assistantText ||
+          "I can help with services, pricing, and next steps. Tell me your project type, timeline, and goals.",
+      };
+    }
+
+    for (const call of toolCalls) {
+      let parsedArgs: unknown = {};
+      try {
+        parsedArgs = JSON.parse(call.arguments || "{}");
+      } catch {
+        parsedArgs = {};
+      }
+
+      const output = runTool(call.name, parsedArgs);
+
+      messages.push({
+        role: "tool",
+        tool_call_id: call.id,
+        name: call.name,
+        content: JSON.stringify(output),
+      });
+    }
+  }
+
+  const finalStep = await callGroqChatCompletions({
+    model: GROQ_MODEL,
+    messages,
+    tools,
+    tool_choice: "auto",
+    max_completion_tokens: MAX_OUTPUT_TOKENS,
+  });
+
+  if (!finalStep.ok) {
+    return { ok: false, error: finalStep.error };
+  }
+
+  const finalMessage = extractGroqChoiceMessage(finalStep.json);
+  if (!finalMessage) {
+    return { ok: false, error: "Groq API error: missing final assistant message." };
+  }
+
+  return {
+    ok: true,
+    reply:
+      extractGroqMessageText(finalMessage) ||
+      "I can help with services, pricing, and next steps. Tell me your project type, timeline, and goals.",
+  };
+}
+
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
   if (!enforceRateLimit(ip)) {
     return NextResponse.json(
       {
-        reply:
-          "Too many requests right now. Please wait a moment and try again.",
+        reply: "Too many requests right now. Please wait a moment and try again.",
       },
       { status: 429 }
     );
@@ -438,147 +830,62 @@ export async function POST(req: NextRequest) {
   }
 
   const transcript = messages
-    .map((message) => `${message.role === "user" ? "User" : "Assistant"}: ${message.content}`)
+    .map(
+      (message) =>
+        `${message.role === "user" ? "User" : "Assistant"}: ${message.content}`
+    )
     .join("\n");
 
-  const input = [
-    {
-      role: "user",
-      content: [{ type: "input_text", text: transcript }],
-    },
-  ];
+  const mode = getProviderMode();
+  const provider = resolveProvider(mode);
 
-  const tools = [
-    {
-      type: "function",
-      name: "get_services",
-      description: "Get studio services and the fastest way to start a project.",
-      parameters: {
-        type: "object",
-        properties: {},
-        additionalProperties: false,
-      },
-    },
-    {
-      type: "function",
-      name: "estimate_price_range",
-      description:
-        "Estimate directional project price range and timeline in GBP based on scope.",
-      parameters: {
-        type: "object",
-        properties: {
-          projectType: { type: "string" },
-          pageCount: { type: "number" },
-          includesCms: { type: "boolean" },
-          includesBranding: { type: "boolean" },
-          urgency: { type: "string", enum: ["normal", "fast", "rush"] },
-        },
-        additionalProperties: false,
-      },
-    },
-    {
-      type: "function",
-      name: "get_booking_details",
-      description: "Return email, phone, and direct call-booking instructions.",
-      parameters: {
-        type: "object",
-        properties: {},
-        additionalProperties: false,
-      },
-    },
-    {
-      type: "function",
-      name: "submit_quote_request",
-      description:
-        "Capture quote request details. Requires at least name and email.",
-      parameters: {
-        type: "object",
-        properties: {
-          name: { type: "string" },
-          email: { type: "string" },
-          organization: { type: "string" },
-          projectType: { type: "string" },
-          timeline: { type: "string" },
-          notes: { type: "string" },
-        },
-        additionalProperties: false,
-      },
-    },
-  ];
+  if (!provider) {
+    const setupMessage =
+      mode === "groq"
+        ? "Assistant setup incomplete. Add GROQ_API_KEY and redeploy."
+        : "Assistant setup incomplete. Add OPENAI_API_KEY or GROQ_API_KEY and redeploy.";
 
-  const first = await callOpenAI({
-    model: MODEL,
-    instructions: SYSTEM_PROMPT,
-    input,
-    tools,
-    tool_choice: "auto",
-    temperature: 0.3,
-    max_output_tokens: 420,
-  });
-
-  if (!first.ok) {
     return NextResponse.json(
       {
-        reply:
-          "The assistant is temporarily unavailable. Please use Book a call to continue.",
-        error: first.error,
+        reply: setupMessage,
       },
       { status: 502 }
     );
   }
 
-  let responseJson = first.json;
+  const hasGroq = Boolean(process.env.GROQ_API_KEY);
+  let result: ProviderResult;
 
-  for (let i = 0; i < 4; i += 1) {
-    const calls = extractToolCalls(responseJson);
-    if (!calls.length) {
-      break;
-    }
+  if (provider === "openai") {
+    result = await generateWithOpenAI(transcript);
 
-    const toolOutputs = calls.map((call) => {
-      let parsedArgs: unknown = {};
-      try {
-        parsedArgs = JSON.parse(call.arguments || "{}");
-      } catch {
-        parsedArgs = {};
+    if (
+      !result.ok &&
+      mode !== "groq" &&
+      hasGroq &&
+      result.error &&
+      (looksLikeInsufficientQuota(result.error) ||
+        looksLikeOpenAIAuthError(result.error))
+    ) {
+      const fallback = await generateWithGroq(transcript);
+      if (fallback.ok) {
+        result = fallback;
       }
-
-      const output = runTool(call.name, parsedArgs);
-      return {
-        type: "function_call_output",
-        call_id: call.call_id,
-        output: JSON.stringify(output),
-      };
-    });
-
-    const followUp = await callOpenAI({
-      model: MODEL,
-      instructions: SYSTEM_PROMPT,
-      previous_response_id: (responseJson as { id?: unknown }).id,
-      input: toolOutputs,
-      tools,
-      tool_choice: "auto",
-      temperature: 0.3,
-      max_output_tokens: 420,
-    });
-
-    if (!followUp.ok) {
-      return NextResponse.json(
-        {
-          reply:
-            "I can help with services, pricing, and booking details. Use Book a call and we can continue.",
-          error: followUp.error,
-        },
-        { status: 502 }
-      );
     }
-
-    responseJson = followUp.json;
+  } else {
+    result = await generateWithGroq(transcript);
   }
 
-  const reply =
-    extractOutputText(responseJson) ||
-    "I can help with services, pricing, and next steps. Tell me your project type, timeline, and goals.";
+  if (!result.ok) {
+    return NextResponse.json(
+      {
+        reply:
+          "The assistant is temporarily unavailable. Please use Book a call to continue.",
+        error: result.error ?? "Unknown provider error.",
+      },
+      { status: 502 }
+    );
+  }
 
-  return NextResponse.json({ reply });
+  return NextResponse.json({ reply: result.reply });
 }

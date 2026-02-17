@@ -62,10 +62,6 @@ export function HeroIllustration() {
 
         <rect x="0" y="0" width="560" height="420" fill="url(#dither)" opacity="0.03" />
       </svg>
-
-      <div className="pointer-events-none absolute bottom-4 left-4 hidden items-center gap-2 rounded-full border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-accent)] sm:flex">
-        vector / pixel blend
-      </div>
     </div>
   );
 }
