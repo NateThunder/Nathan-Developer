@@ -31,13 +31,7 @@ const INITIAL_MESSAGE: ChatMessage = {
 
 function shouldShowBookCallPopup(message: string) {
   const text = message.toLowerCase();
-  const hasCallIntent = text.includes("book a call");
-  const hasQuoteCapture =
-    text.includes("quote request has been captured") ||
-    text.includes("confirm the project scope") ||
-    text.includes("discuss further");
-
-  return hasCallIntent && hasQuoteCapture;
+  return text.includes("book a call");
 }
 
 export function ChatAgentWidget() {
@@ -142,9 +136,9 @@ export function ChatAgentWidget() {
   }, [messages, isSending, isOpen]);
 
   return (
-    <div className="fixed bottom-4 right-4 z-[90] sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-3 right-3 z-[90] flex flex-col items-end sm:bottom-6 sm:right-6">
       {isOpen ? (
-        <section className="w-[min(94vw,420px)] overflow-hidden rounded-[22px] border-2 border-[#b8cbd1] bg-[#f3ece0] shadow-[0_18px_38px_rgba(5,14,18,0.42)] ring-1 ring-[#d8e4e8]">
+        <section className="flex h-[min(78dvh,680px)] max-h-[calc(100dvh-1.5rem)] w-[min(420px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[22px] border-2 border-[#b8cbd1] bg-[#f3ece0] shadow-[0_18px_38px_rgba(5,14,18,0.42)] ring-1 ring-[#d8e4e8]">
           <header className="flex items-center justify-between border-b border-[#c5d7dc] bg-[#1f4f5f] px-4 py-3">
             <div>
               <p className="mono-label text-[10px] text-[#f2d5a2]">AI ASSISTANT</p>
@@ -164,7 +158,7 @@ export function ChatAgentWidget() {
 
           <div
             ref={threadRef}
-            className="chat-scrollbar max-h-[min(56vh,460px)] space-y-3 overflow-y-auto bg-[#d2dce1] px-4 py-4 pr-3"
+            className="chat-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto bg-[#d2dce1] px-4 py-4 pr-3"
           >
             {messages.map((message) => {
               const showBookCallPopup =

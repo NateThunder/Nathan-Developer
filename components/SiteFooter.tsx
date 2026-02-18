@@ -8,7 +8,6 @@ const footerLinks = [
   { href: "#features", label: "Features" },
   { href: "#services", label: "Services" },
   { href: "#work", label: "Work" },
-  { href: "#testimonials", label: "Testimonials" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -58,7 +57,7 @@ export function SiteFooter() {
         <div className="mt-8 grid gap-8 border-t-2 border-[var(--color-border)] pt-7 sm:mt-10 sm:pt-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-base font-semibold text-[var(--color-text)]">
-              &lt;STUDIO_NAME&gt;
+              Somevi Labs
             </p>
             <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">
               Web design studio for modern teams that need clear strategy and
@@ -133,7 +132,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-8 flex flex-col gap-2 border-t-2 border-[var(--color-border)] pt-6 text-sm text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between">
-          <p>(c) {year} &lt;STUDIO_NAME&gt;. All rights reserved.</p>
+          <p>(c) {year} Somevi Labs. All rights reserved.</p>
           <p className="mono-label text-[10px] text-[var(--color-accent-warm)]">
             // 8px grid rhythm / vector first / pixel accents
           </p>
