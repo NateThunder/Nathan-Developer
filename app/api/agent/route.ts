@@ -109,7 +109,7 @@ const SERVICES: Service[] = [
 ];
 
 const SYSTEM_PROMPT = `
-You are the website assistant for <STUDIO_NAME>, a web design studio.
+You are the website assistant for Somevi Labs, a web design studio.
 
 Primary goal:
 - Help visitors quickly get started and move them to booking.
@@ -1031,14 +1031,23 @@ async function callGroqChatCompletions(payload: Record<string, unknown>) {
   return { ok: true as const, json };
 }
 
-async function generateWithOpenAI(transcript: string): Promise<ProviderResult> {
+function buildResponsesInput(messages: ChatMessage[]) {
+  return messages.map((message) => ({
+    role: message.role,
+    content: [{ type: "input_text", text: message.content }],
+  }));
+}
+
+function buildProviderMessages(messages: ChatMessage[]) {
+  return messages.map((message) => ({
+    role: message.role,
+    content: message.content,
+  }));
+}
+
+async function generateWithOpenAI(messages: ChatMessage[]): Promise<ProviderResult> {
   const tools = buildResponsesTools();
-  const input = [
-    {
-      role: "user",
-      content: [{ type: "input_text", text: transcript }],
-    },
-  ];
+  const input = buildResponsesInput(messages);
 
   const first = await callOpenAIResponses({
     model: OPENAI_MODEL,
@@ -1102,17 +1111,17 @@ async function generateWithOpenAI(transcript: string): Promise<ProviderResult> {
   return { ok: true, reply: resolved ?? reply };
 }
 
-async function generateWithGroq(transcript: string): Promise<ProviderResult> {
+async function generateWithGroq(messages: ChatMessage[]): Promise<ProviderResult> {
   const tools = buildChatTools();
-  const messages: Array<Record<string, unknown>> = [
+  const completionMessages: Array<Record<string, unknown>> = [
     { role: "system", content: SYSTEM_PROMPT },
-    { role: "user", content: transcript },
+    ...buildProviderMessages(messages),
   ];
 
   for (let i = 0; i < MAX_TOOL_ROUNDS; i += 1) {
     const step = await callGroqChatCompletions({
       model: GROQ_MODEL,
-      messages,
+      messages: completionMessages,
       tools,
       tool_choice: "auto",
       max_completion_tokens: MAX_OUTPUT_TOKENS,
@@ -1130,7 +1139,7 @@ async function generateWithGroq(transcript: string): Promise<ProviderResult> {
     const assistantText = extractGroqMessageText(message);
     const toolCalls = extractGroqToolCalls(message);
 
-    messages.push({
+    completionMessages.push({
       role: "assistant",
       content: assistantText,
       ...(Array.isArray(message.tool_calls) && message.tool_calls.length
@@ -1159,7 +1168,7 @@ async function generateWithGroq(transcript: string): Promise<ProviderResult> {
 
       const output = runTool(call.name, parsedArgs);
 
-      messages.push({
+      completionMessages.push({
         role: "tool",
         tool_call_id: call.id,
         name: call.name,
@@ -1170,7 +1179,7 @@ async function generateWithGroq(transcript: string): Promise<ProviderResult> {
 
   const finalStep = await callGroqChatCompletions({
     model: GROQ_MODEL,
-    messages,
+    messages: completionMessages,
     tools,
     tool_choice: "auto",
     max_completion_tokens: MAX_OUTPUT_TOKENS,
@@ -1231,13 +1240,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply: staticReply });
   }
 
-  const transcript = messages
-    .map(
-      (message) =>
-        `${message.role === "user" ? "User" : "Assistant"}: ${message.content}`
-    )
-    .join("\n");
-
   const mode = getProviderMode();
   const provider = resolveProvider(mode);
 
@@ -1259,16 +1261,16 @@ export async function POST(req: NextRequest) {
   let result: ProviderResult;
 
   if (provider === "openai") {
-    result = await generateWithOpenAI(transcript);
+    result = await generateWithOpenAI(messages);
 
     if (!result.ok && mode !== "groq" && hasGroq) {
-      const fallback = await generateWithGroq(transcript);
+      const fallback = await generateWithGroq(messages);
       if (fallback.ok) {
         result = fallback;
       }
     }
   } else {
-    result = await generateWithGroq(transcript);
+    result = await generateWithGroq(messages);
   }
 
   if (!result.ok) {

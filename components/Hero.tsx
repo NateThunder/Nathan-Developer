@@ -10,16 +10,16 @@ export function Hero() {
       <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-4 pb-12 pt-8 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-20">
         <div>
           <p className="mono-label text-[11px] text-[var(--color-accent)]">
-            &lt;STUDIO_NAME&gt; / WEB DESIGN STUDIO
+            Nathan Somevi | Full Stack Engineer | WEB DESIGN
           </p>
 
           <h1 className="mt-4 max-w-[15ch] text-balance text-3xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-5xl lg:text-6xl">
-            We design websites that feel engineered.
+            I build software that helps your business grow.
           </h1>
 
           <p className="mt-6 max-w-[58ch] text-base leading-7 text-[var(--color-muted)] sm:text-lg sm:leading-8">
-            Launch modern, conversion-focused websites with a fast design and
-            build process tailored for ambitious teams.
+            Websites, applications, and custom systems designed to be easy to manage, flexible to change, 
+            and tailored to your vision.
           </p>
 
           <p className="mt-5 inline-flex max-w-full items-center rounded-full border-2 border-[var(--color-accent-warm)] bg-[var(--color-surface-alt)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-accent)]">

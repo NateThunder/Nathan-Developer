@@ -4,7 +4,6 @@ import { Hero } from "@/components/Hero";
 import { Navigation } from "@/components/Navigation";
 import { ServicesBand } from "@/components/ServicesBand";
 import { SiteFooter } from "@/components/SiteFooter";
-import { Testimonials } from "@/components/Testimonials";
 import { WorkShowcase } from "@/components/WorkShowcase";
 
 export default function Home() {
@@ -16,7 +15,6 @@ export default function Home() {
         <FeatureGrid />
         <ServicesBand />
         <WorkShowcase />
-        <Testimonials />
       </main>
       <SiteFooter />
       <ChatAgentWidget />

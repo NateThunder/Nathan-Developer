@@ -7,7 +7,6 @@ const links = [
   { href: "#features", label: "Features" },
   { href: "#services", label: "Services" },
   { href: "#work", label: "Work" },
-  { href: "#testimonials", label: "Testimonials" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -36,7 +35,7 @@ export function Navigation() {
             </span>
           </span>
           <span className="text-sm font-semibold tracking-tight sm:text-base">
-            &lt;STUDIO_NAME&gt;
+            &lt;SOMEVI_LABS&gt;
           </span>
         </a>
 
