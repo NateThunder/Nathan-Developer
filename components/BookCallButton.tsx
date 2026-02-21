@@ -55,7 +55,11 @@ export function BookCallButton({
 
   return (
     <>
-      <button type="button" onClick={openDialog} className={className}>
+      <button
+        type="button"
+        onClick={openDialog}
+        className={`relative z-[80] ${className}`}
+      >
         {label}
       </button>
 
@@ -71,7 +75,7 @@ export function BookCallButton({
                 type="button"
                 aria-label="Close contact details"
                 onClick={() => setIsOpen(false)}
-                className="absolute inset-0 bg-[#0f1e27]/80"
+                className="absolute inset-0 bg-black/75"
               />
 
               <div className="relative max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-t-[24px] border-2 border-[var(--color-accent-warm)] bg-[var(--color-bg-elevated)] p-5 shadow-[var(--shadow-card)] sm:rounded-[24px] sm:p-6">

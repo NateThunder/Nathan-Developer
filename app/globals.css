@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #1f4f5f;
-  --color-bg-elevated: #183f4d;
-  --color-surface: #2a5b6a;
-  --color-surface-alt: #244f5d;
-  --color-band: #153a47;
-  --color-border: #739ea9;
-  --color-text: #f2f5f4;
-  --color-muted: #d0dfdf;
-  --color-accent: #f2d5a2;
-  --color-accent-warm: #d87b5d;
-  --color-accent-deep: #bf6548;
-  --color-accent-soft: #4b6d79;
-  --color-focus: #fff0d0;
+  --color-bg: #1a222e;
+  --color-bg-elevated: #202a38;
+  --color-surface: #283444;
+  --color-surface-alt: #222d3c;
+  --color-band: #171f2a;
+  --color-border: #313d4f;
+  --color-text: #ffffff;
+  --color-muted: #a0aec0;
+  --color-accent: #ff8c69;
+  --color-accent-warm: #ff8c69;
+  --color-accent-deep: #e77756;
+  --color-accent-soft: #cbd5e0;
+  --color-focus: #cbd5e0;
   --shadow-card: 0 10px 18px rgba(9, 20, 26, 0.2);
   --content-max: 1200px;
 }
@@ -36,7 +36,7 @@ body {
 }
 
 body {
-  background: linear-gradient(180deg, #245868 0%, var(--color-bg) 45%, #1a4351 100%);
+  background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-space-grotesk), "Trebuchet MS", sans-serif;
   text-rendering: optimizeLegibility;
@@ -51,39 +51,65 @@ a {
   overflow-x: clip;
 }
 
-.studio-page::before {
+.hero-backdrop {
+  background: var(--color-bg);
+}
+
+.studio-page > header,
+.studio-page > main > section,
+.studio-page > footer {
+  position: relative;
+  isolation: isolate;
+}
+
+.studio-page > header::before,
+.studio-page > main > section::before,
+.studio-page > footer::before {
   content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/texture.jpeg");
+  background-repeat: repeat;
+  background-size: 420px 420px;
+  opacity: 0.08;
+}
+
+.studio-page > header > *,
+.studio-page > main > section > *,
+.studio-page > footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+.studio-page::before {
+  content: none;
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(circle at 10% 12%, rgba(242, 213, 162, 0.12) 0 10%, transparent 11%),
-    radial-gradient(circle at 86% 18%, rgba(216, 123, 93, 0.1) 0 12%, transparent 13%),
-    radial-gradient(circle at 74% 76%, rgba(242, 213, 162, 0.08) 0 14%, transparent 15%),
-    conic-gradient(from 210deg at 18% 72%, rgba(255, 255, 255, 0.08), transparent 26%),
-    conic-gradient(from 18deg at 88% 82%, rgba(255, 255, 255, 0.06), transparent 30%);
+  background: none;
 }
 
 .studio-page::after {
-  content: "";
+  content: none;
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.08;
+  opacity: 0;
   background-image:
-    linear-gradient(var(--color-accent) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-accent) 1px, transparent 1px);
-  background-size: 120px 120px;
-  mask-image: radial-gradient(circle at center, black 18%, transparent 78%);
+    linear-gradient(rgba(203, 213, 224, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 152, 190, 0.03) 1px, transparent 1px);
+  background-size: 180px 180px;
+  mask-image: none;
 }
 
 main,
 footer,
 header {
   position: relative;
-  z-index: 1;
 }
 
 .mono-label {
@@ -122,7 +148,7 @@ header {
 
 .chat-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #6d95a1 #e5edf0;
+  scrollbar-color: #6b7280 #1f2937;
 }
 
 .chat-scrollbar::-webkit-scrollbar {
@@ -130,18 +156,18 @@ header {
 }
 
 .chat-scrollbar::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, #edf3f5 0%, #e3ebee 100%);
-  border-left: 1px solid #c4d4da;
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+  border-left: 1px solid #374151;
 }
 
 .chat-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7fa4af 0%, #557d89 100%);
-  border: 2px solid #e5edf0;
+  background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
+  border: 2px solid #111827;
   border-radius: 999px;
 }
 
 .chat-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #8eb2bd 0%, #5d8895 100%);
+  background: linear-gradient(180deg, #9ca3af 0%, #6b7280 100%);
 }
 
 .feature-grid article:nth-child(2n),
@@ -209,14 +235,12 @@ header {
 
 @media (max-width: 640px) {
   .studio-page::before {
-    background:
-      radial-gradient(circle at 12% 14%, rgba(242, 213, 162, 0.1) 0 10%, transparent 12%),
-      radial-gradient(circle at 88% 18%, rgba(216, 123, 93, 0.08) 0 11%, transparent 13%);
+    background: none;
   }
 
   .studio-page::after {
-    opacity: 0.04;
-    background-size: 172px 172px;
+    opacity: 0;
+    background-size: 188px 188px;
   }
 
   .mono-label {

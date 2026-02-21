@@ -139,7 +139,7 @@ export function ChatAgentWidget() {
     <div className="fixed bottom-3 right-3 z-[90] flex flex-col items-end sm:bottom-6 sm:right-6">
       {isOpen ? (
         <section className="flex h-[min(78dvh,680px)] max-h-[calc(100dvh-1.5rem)] w-[min(420px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[22px] border-2 border-[#b8cbd1] bg-[#f3ece0] shadow-[0_18px_38px_rgba(5,14,18,0.42)] ring-1 ring-[#d8e4e8]">
-          <header className="flex items-center justify-between border-b border-[#c5d7dc] bg-[#1f4f5f] px-4 py-3">
+          <header className="flex items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3">
             <div>
               <p className="mono-label text-[10px] text-[#f2d5a2]">AI ASSISTANT</p>
               <p className="text-sm font-semibold text-[#f4f8f9]">
@@ -149,7 +149,7 @@ export function ChatAgentWidget() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className={`inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#95aeb6] bg-[#f0f5f6] text-[#173640] transition hover:bg-[#ffffff] ${FOCUS_RING}`}
+              className={`inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] transition hover:bg-[var(--color-surface-alt)] ${FOCUS_RING}`}
               aria-label="Close chat"
             >
               x
@@ -170,7 +170,7 @@ export function ChatAgentWidget() {
                   <div
                     className={`max-w-[88%] rounded-[14px] border-2 px-3 py-2 text-sm leading-6 ${
                       message.role === "assistant"
-                        ? "border-[#bfced4] bg-[#fffaf1] text-[#173640]"
+                        ? "border-[var(--color-border)] bg-[var(--color-surface-alt)] text-[var(--color-text)]"
                         : `ml-auto border-[#bf6548] bg-[#f2d5a2] text-[#2f271f] ${
                             message.id === lastUserMessageId
                               ? "ring-2 ring-[#d87b5d] shadow-[0_6px_14px_rgba(20,8,4,0.28)]"
@@ -214,7 +214,7 @@ export function ChatAgentWidget() {
                   className={`rounded-full border px-2.5 py-1 text-[11px] transition ${
                     activeSuggestion === suggestion
                       ? "border-[#bf6548] bg-[#f2d5a2] font-semibold text-[#2f271f] shadow-[0_4px_10px_rgba(20,8,4,0.2)]"
-                      : "border-[#b8c8cd] bg-[#f4f8f9] text-[#4d6871] hover:border-[#7f9eaa] hover:text-[#173640]"
+                      : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] hover:border-[var(--color-accent-soft)] hover:text-[var(--color-text)]"
                   } ${FOCUS_RING}`}
                 >
                   {suggestion}
@@ -235,7 +235,7 @@ export function ChatAgentWidget() {
                   }
                 }}
                 placeholder="Type your project details..."
-                className={`h-11 min-w-0 flex-1 rounded-[12px] border-2 border-[#8ea4ad] bg-[#ecf2f4] px-3 text-sm text-[#173640] placeholder:text-[#5e757e] ${FOCUS_RING}`}
+                className={`h-11 min-w-0 flex-1 rounded-[12px] border-2 border-[var(--color-border)] bg-[var(--color-bg)] px-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] ${FOCUS_RING}`}
                 aria-label="Message assistant"
               />
               <button
