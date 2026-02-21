@@ -6,10 +6,10 @@ const FOCUS_RING =
 
 export function Hero() {
   return (
-    <section id="top" className="relative border-b-2 border-[var(--color-border)] bg-[var(--color-bg)]">
+    <section id="top" className="hero-backdrop relative border-b border-[var(--color-border)]">
       <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-4 pb-12 pt-8 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-20">
-        <div>
-          <p className="mono-label text-[11px] text-[var(--color-accent)]">
+        <div className="relative z-[80]">
+          <p className="mono-label text-[11px] text-[var(--color-accent-soft)]">
             Nathan Somevi | Full Stack Engineer | WEB DESIGN
           </p>
 
@@ -22,17 +22,19 @@ export function Hero() {
             and tailored to your vision.
           </p>
 
-          <p className="mt-5 inline-flex max-w-full items-center rounded-full border-2 border-[var(--color-accent-warm)] bg-[var(--color-surface-alt)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-accent)]">
-            <span className="typewriter-line">System status: shipping clarity + speed.</span>
+          <p className="mt-5 inline-flex max-w-full items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-alt)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-accent-soft)]">
+            <span className="typewriter-line">
+              System status: shipping clarity + speed.
+            </span>
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <BookCallButton
-              className={`pixel-notch inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--color-accent-deep)] bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[#2c2f2d] transition duration-200 hover:-translate-y-0.5 hover:brightness-105 sm:w-auto ${FOCUS_RING}`}
+              className={`pixel-notch inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--color-accent-deep)] bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[#1f2023] transition duration-200 hover:-translate-y-0.5 hover:brightness-105 sm:w-auto ${FOCUS_RING}`}
             />
             <a
               href="#work"
-              className={`inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-3 text-sm font-semibold text-[var(--color-text)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent-warm)] sm:w-auto ${FOCUS_RING}`}
+              className={`relative z-[80] inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-3 text-sm font-semibold text-[var(--color-text)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent-soft)] sm:w-auto ${FOCUS_RING}`}
             >
               See work
             </a>

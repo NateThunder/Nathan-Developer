@@ -1034,7 +1034,12 @@ async function callGroqChatCompletions(payload: Record<string, unknown>) {
 function buildResponsesInput(messages: ChatMessage[]) {
   return messages.map((message) => ({
     role: message.role,
-    content: [{ type: "input_text", text: message.content }],
+    content: [
+      {
+        type: message.role === "assistant" ? "output_text" : "input_text",
+        text: message.content,
+      },
+    ],
   }));
 }
 

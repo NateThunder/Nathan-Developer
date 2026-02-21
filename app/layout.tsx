@@ -57,7 +57,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${brandSans.variable} ${accentMono.variable} antialiased`}>
-        {children}
+        <div className="relative min-h-screen bg-[var(--color-bg)]">
+          <div className="relative">{children}</div>
+        </div>
       </body>
     </html>
   );

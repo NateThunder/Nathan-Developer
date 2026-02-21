@@ -8,7 +8,7 @@ import { WorkShowcase } from "@/components/WorkShowcase";
 
 export default function Home() {
   return (
-    <div className="studio-page min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+    <div className="studio-page min-h-screen text-[var(--color-text)]">
       <Navigation />
       <main>
         <Hero />

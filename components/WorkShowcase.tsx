@@ -72,14 +72,14 @@ export function WorkShowcase() {
                     : "border-[var(--color-border)] border-t-4"
                 } ${FOCUS_RING}`}
               >
-                <div className="rounded-[12px] border-2 border-[var(--color-border)] bg-[#183847] p-2">
+                <div className="rounded-[12px] border-2 border-[var(--color-border)] bg-[var(--color-surface-alt)] p-2">
                   <div className="mb-2 flex items-center gap-1.5 px-1">
                     <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent)]" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent-warm)]" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#89aeb8]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent-deep)]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-border)]" />
                   </div>
 
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--color-border)]/70 bg-[#0f2530]">
+                  <div className="relative z-[80] aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--color-border)]/70 bg-[var(--color-bg)]">
                     <Image
                       src={project.screenshot}
                       alt={project.alt}
@@ -87,6 +87,7 @@ export function WorkShowcase() {
                       sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       className="object-cover object-top transition duration-300 group-hover:scale-[1.015]"
                     />
+                    <div className="pointer-events-none absolute inset-0 bg-[var(--color-bg)]/22 mix-blend-multiply" />
                   </div>
                 </div>
 
