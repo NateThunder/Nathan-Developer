@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { PixelIcon, type PixelIconName } from "@/components/PixelIcon";
 import { SectionVectorArt } from "@/components/SectionVectorArt";
 
@@ -101,9 +101,18 @@ const FOCUS_RING =
 export function ServicesBand() {
   const [openServiceId, setOpenServiceId] = useState<string>("agent");
 
+  const handleSectionClick = (event: MouseEvent<HTMLElement>) => {
+    const target = event.target as HTMLElement;
+
+    if (!target.closest("[data-service-card='true']")) {
+      setOpenServiceId("");
+    }
+  };
+
   return (
     <section
       id="services"
+      onClick={handleSectionClick}
       className="scroll-mt-24 border-y-2 border-[var(--color-border)] bg-[var(--color-band)] py-12 sm:py-16 lg:py-20"
       aria-label="Services"
     >
@@ -129,7 +138,7 @@ export function ServicesBand() {
           />
         </div>
 
-        <div className="services-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="services-grid grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => {
             const warm = index % 2 === 1;
             const isOpen = openServiceId === service.id;
@@ -137,6 +146,7 @@ export function ServicesBand() {
             return (
               <article
                 key={service.id}
+                data-service-card="true"
                 className={`pixel-notch card-hover rounded-[22px] border-2 bg-[var(--color-bg-elevated)] p-5 sm:p-6 ${
                   warm
                     ? "border-[var(--color-accent-warm)] border-t-4"

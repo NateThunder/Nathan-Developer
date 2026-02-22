@@ -184,7 +184,7 @@ export function ChatAgentWidget() {
                   {showBookCallPopup ? (
                     <div className="max-w-[88%]">
                       <BookCallButton
-                        label="Book a call now"
+                        label="Contact now"
                         className={`pixel-notch inline-flex w-full items-center justify-center rounded-full border-2 border-[#8a3f2f] bg-[var(--color-accent-warm)] px-4 py-2.5 text-sm font-semibold text-[#1d1b1a] shadow-[0_8px_16px_rgba(20,8,4,0.32)] transition hover:brightness-105 ${FOCUS_RING}`}
                       />
                     </div>
