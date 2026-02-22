@@ -189,6 +189,8 @@ header {
 
 .typewriter-line {
   --characters: 39ch;
+  --steps: 39;
+  --tracking-extra: 0em;
   display: inline-block;
   width: 0;
   max-width: 100%;
@@ -196,7 +198,7 @@ header {
   overflow: hidden;
   border-right: 2px solid var(--color-accent);
   animation:
-    typewriter 8.4s steps(39, end) infinite,
+    typewriter 8.4s steps(var(--steps), end) infinite,
     caret 0.8s step-end infinite;
 }
 
@@ -208,7 +210,7 @@ header {
 
   42%,
   66% {
-    width: var(--characters);
+    width: calc(var(--characters) + var(--tracking-extra));
   }
 
   100% {
@@ -278,5 +280,10 @@ header {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .typewriter-line {
+    width: auto;
+    border-right: 0;
   }
 }

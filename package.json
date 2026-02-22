@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:agent:static": "bash scripts/test-agent-static.sh",
+    "test:agent:canary": "bash scripts/test-agent-canary.sh"
   },
   "dependencies": {
     "next": "16.1.6",

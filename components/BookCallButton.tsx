@@ -3,7 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 
-const CONTACT_EMAIL = "hello@studio.com";
+const CONTACT_EMAIL = "manager@nathansomevi.com";
 const CONTACT_PHONE_E164 = "+447846677463";
 const CONTACT_PHONE_LABEL = "+44 7846 677463";
 
@@ -15,7 +15,7 @@ type BookCallButtonProps = {
 
 export function BookCallButton({
   className,
-  label = "Book a call",
+  label = "Contact",
   onOpen,
 }: BookCallButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,7 +95,7 @@ export function BookCallButton({
                   id={titleId}
                   className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text)]"
                 >
-                  Book a call
+                  Contact
                 </h3>
                 <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
                   Email or call directly. We can continue by phone or schedule a

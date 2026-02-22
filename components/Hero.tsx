@@ -1,8 +1,14 @@
 import { HeroIllustration } from "@/components/HeroIllustration";
 import { BookCallButton } from "@/components/BookCallButton";
+import { StatusTypewriter } from "@/components/StatusTypewriter";
 
 const FOCUS_RING =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]";
+
+const STATUS_MESSAGES = [
+  "Custom starter sites in 48 hours.",
+  "Full custom builds in 2-4 weeks.",
+];
 
 export function Hero() {
   return (
@@ -22,10 +28,8 @@ export function Hero() {
             and tailored to your vision.
           </p>
 
-          <p className="mt-5 inline-flex max-w-full items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-alt)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-accent-soft)]">
-            <span className="typewriter-line">
-              System status: shipping clarity + speed.
-            </span>
+          <p className="mt-5 inline-flex w-full max-w-full items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-alt)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-accent-soft)] sm:w-auto">
+            <StatusTypewriter messages={STATUS_MESSAGES} />
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">

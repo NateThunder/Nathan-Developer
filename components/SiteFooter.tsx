@@ -60,8 +60,8 @@ export function SiteFooter() {
               Somevi Labs
             </p>
             <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">
-              Web design studio for modern teams that need clear strategy and
-              production-ready execution.
+              Independent web designer and developer delivering clear strategy
+              and production-ready execution.
             </p>
           </div>
 
@@ -83,10 +83,10 @@ export function SiteFooter() {
             <ul className="mt-3 space-y-2 text-sm text-[var(--color-muted)]">
               <li>
                 <a
-                  href="mailto:hello@studio.com"
+                  href="mailto:manager@nathansomevi.com"
                   className={`transition hover:text-[var(--color-text)] ${FOCUS_RING}`}
                 >
-                  hello@studio.com
+                  manager@nathansomevi.com
                 </a>
               </li>
               <li>
