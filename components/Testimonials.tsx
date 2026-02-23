@@ -51,36 +51,22 @@ export function Testimonials() {
         </div>
 
         <div className="testimonial-grid mt-8 grid gap-4 sm:mt-10 md:grid-cols-3">
-          {testimonials.map((item, index) => {
-            const warm = index % 2 === 1;
-
-            return (
-              <article
-                key={item.author}
-                className={`pixel-notch card-hover rounded-[22px] border-2 bg-[var(--color-surface)] p-5 sm:p-6 ${
-                  warm
-                    ? "border-[var(--color-accent-warm)] border-t-4"
-                    : "border-[var(--color-border)] border-t-4"
-                }`}
-              >
-                <p
-                  className={`quote-accent text-sm leading-7 ${
-                    warm
-                      ? "text-[var(--color-accent-warm)]"
-                      : "text-[var(--color-muted)]"
-                  }`}
-                >
-                  "{item.quote}"
-                </p>
-                <p className="mt-6 text-sm font-semibold text-[var(--color-text)]">
-                  {item.author}
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
-                  {item.role}
-                </p>
-              </article>
-            );
-          })}
+          {testimonials.map((item) => (
+            <article
+              key={item.author}
+              className="pixel-notch card-hover rounded-[22px] border-2 border-[var(--color-border)] border-t-4 bg-[var(--color-surface)] p-5 sm:p-6"
+            >
+              <p className="quote-accent text-sm leading-7 text-[var(--color-muted)]">
+                &ldquo;{item.quote}&rdquo;
+              </p>
+              <p className="mt-6 text-sm font-semibold text-[var(--color-text)]">
+                {item.author}
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                {item.role}
+              </p>
+            </article>
+          ))}
         </div>
       </div>
     </section>

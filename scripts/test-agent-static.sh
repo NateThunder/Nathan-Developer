@@ -65,7 +65,13 @@ run_case \
   "contact-wording" \
   '{"messages":[{"role":"user","content":"How can I contact you on whatsapp and email?"}]}' \
   "200" \
-  "Use Contact."
+  "Book a Call button"
+
+run_case \
+  "booking-intent-friendly" \
+  '{"messages":[{"role":"user","content":"i want to book for my twerkout classes"}]}' \
+  "200" \
+  "Use the Book a Call button on this page"
 
 run_case \
   "pricing-missing-details" \

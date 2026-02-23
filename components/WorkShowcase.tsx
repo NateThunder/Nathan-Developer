@@ -56,47 +56,39 @@ export function WorkShowcase() {
         </div>
 
         <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 xl:grid-cols-3">
-          {projects.map((project, index) => {
-            const warm = index % 2 === 1;
-
-            return (
-              <a
-                key={project.url}
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open ${project.name} in a new tab`}
-                className={`pixel-notch card-hover group rounded-[22px] border-2 bg-[var(--color-surface)] p-4 sm:p-5 ${
-                  warm
-                    ? "border-[var(--color-accent-warm)] border-t-4"
-                    : "border-[var(--color-border)] border-t-4"
-                } ${FOCUS_RING}`}
-              >
-                <div className="rounded-[12px] border-2 border-[var(--color-border)] bg-[var(--color-surface-alt)] p-2">
-                  <div className="mb-2 flex items-center gap-1.5 px-1">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent)]" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent-deep)]" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-border)]" />
-                  </div>
-
-                  <div className="relative z-[80] aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--color-border)]/70 bg-[var(--color-bg)]">
-                    <Image
-                      src={project.screenshot}
-                      alt={project.alt}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                      className="object-cover object-top transition duration-300 group-hover:scale-[1.015]"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-[var(--color-bg)]/22 mix-blend-multiply" />
-                  </div>
+          {projects.map((project) => (
+            <a
+              key={project.url}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open ${project.name} in a new tab`}
+              className={`pixel-notch card-hover group rounded-[22px] border-2 border-[var(--color-border)] border-t-4 bg-[var(--color-surface)] p-4 sm:p-5 ${FOCUS_RING}`}
+            >
+              <div className="rounded-[12px] border-2 border-[var(--color-border)] bg-[var(--color-surface-alt)] p-2">
+                <div className="mb-2 flex items-center gap-1.5 px-1">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent)]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-accent-deep)]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-border)]" />
                 </div>
 
-                <p className="mt-4 text-2xl font-semibold tracking-[-0.015em] text-[var(--color-text)] sm:text-[1.8rem]">
-                  {project.name}
-                </p>
-              </a>
-            );
-          })}
+                <div className="relative z-[80] aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--color-border)]/70 bg-[var(--color-bg)]">
+                  <Image
+                    src={project.screenshot}
+                    alt={project.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="object-cover object-top transition duration-300 group-hover:scale-[1.015]"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-[var(--color-bg)]/22 mix-blend-multiply" />
+                </div>
+              </div>
+
+              <p className="mt-4 text-2xl font-semibold tracking-[-0.015em] text-[var(--color-text)] sm:text-[1.8rem]">
+                {project.name}
+              </p>
+            </a>
+          ))}
         </div>
       </div>
     </section>
