@@ -99,7 +99,7 @@ const FOCUS_RING =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]";
 
 export function ServicesBand() {
-  const [openServiceId, setOpenServiceId] = useState<string>("agent");
+  const [openServiceId, setOpenServiceId] = useState<string>("");
 
   const handleSectionClick = (event: MouseEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
@@ -139,19 +139,14 @@ export function ServicesBand() {
         </div>
 
         <div className="services-grid grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, index) => {
-            const warm = index % 2 === 1;
+          {services.map((service) => {
             const isOpen = openServiceId === service.id;
 
             return (
               <article
                 key={service.id}
                 data-service-card="true"
-                className={`pixel-notch card-hover rounded-[22px] border-2 bg-[var(--color-bg-elevated)] p-5 sm:p-6 ${
-                  warm
-                    ? "border-[var(--color-accent-warm)] border-t-4"
-                    : "border-[var(--color-border)] border-t-4"
-                }`}
+                className="pixel-notch card-hover rounded-[22px] border-2 border-[var(--color-border)] border-t-4 bg-[var(--color-bg-elevated)] p-5 sm:p-6"
               >
                 <button
                   type="button"

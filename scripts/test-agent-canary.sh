@@ -93,9 +93,9 @@ run_case() {
     reasons+="static-path-response; "
   fi
 
-  if printf "%s" "$reply" | rg -qi "book a call"; then
+  if printf "%s" "$reply" | rg -qi "use contact|calendar\\.google\\.com/calendar/u/0\\?cid="; then
     ok=0
-    reasons+="legacy-copy(book a call); "
+    reasons+="legacy-copy(contact/calendar-link); "
   fi
 
   if [ "$ok" -eq 1 ]; then
@@ -147,4 +147,3 @@ echo "Canary result: $pass_count passed, $fail_count failed, $run_count calls"
 if [ "$fail_count" -gt 0 ]; then
   exit 1
 fi
-

@@ -58,31 +58,23 @@ export function FeatureGrid() {
         </div>
 
         <div className="feature-grid mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 xl:grid-cols-4">
-          {features.map((feature, index) => {
-            const warm = index % 2 === 1;
-
-            return (
-              <article
-                key={feature.title}
-                className={`pixel-notch card-hover rounded-[22px] border-2 bg-[var(--color-surface)] p-5 sm:p-6 ${
-                  warm
-                    ? "border-[var(--color-accent-warm)] border-t-4"
-                    : "border-[var(--color-border)] border-t-4"
-                }`}
-              >
-                <PixelIcon
-                  icon={feature.icon}
-                  className="feature-icon h-9 w-9 text-[var(--color-accent)]"
-                />
-                <h3 className="mt-5 text-lg font-semibold tracking-[-0.01em] text-[var(--color-text)]">
-                  {feature.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
-                  {feature.description}
-                </p>
-              </article>
-            );
-          })}
+          {features.map((feature) => (
+            <article
+              key={feature.title}
+              className="pixel-notch card-hover rounded-[22px] border-2 border-[var(--color-border)] border-t-4 bg-[var(--color-surface)] p-5 sm:p-6"
+            >
+              <PixelIcon
+                icon={feature.icon}
+                className="feature-icon h-9 w-9 text-[var(--color-accent)]"
+              />
+              <h3 className="mt-5 text-lg font-semibold tracking-[-0.01em] text-[var(--color-text)]">
+                {feature.title}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
+                {feature.description}
+              </p>
+            </article>
+          ))}
         </div>
       </div>
     </section>

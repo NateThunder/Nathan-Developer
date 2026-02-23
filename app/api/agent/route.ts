@@ -66,6 +66,17 @@ type ProviderResult = {
   error?: string;
 };
 
+type FormattedTone = "friendly_professional";
+
+type FormattedAgentPayload = {
+  tone: FormattedTone;
+  summary: string;
+  missing_fields: string[];
+  next_question: string;
+  reply: string;
+  format_source: "schema" | "fallback";
+};
+
 type ToolName =
   | "get_services"
   | "estimate_price_range"
@@ -82,35 +93,71 @@ const CONTACT = {
   phone: "+44 7846 677463",
   whatsapp: "+44 7846 677463",
   preferredContact: "WhatsApp",
-  calendar:
-    "https://calendar.google.com/calendar/u/0?cid=NGRmYTk5NjFlZDc5YWQ0MjhhYzQ1YmRhMjNkZTdhNDczNTBkMzNiMzA4YmE4MDAzMGU5ZGQzYzVjY2Y1NThkYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t",
+  calendar: "",
   workingHours: "09:00-18:00 UK time (after-hours calls possible when necessary).",
-  booking: "Use the Contact button on this page.",
+  booking: "Use the Book a Call button on this page.",
+};
+
+const QUALIFICATION_CORE =
+  "Share your business type, goals, budget, timeline, and required features in one message.";
+
+const RESPONSE_POLICY = {
+  scopeAndNextSteps:
+    "I can help with scope, pricing, and next steps. Share your business type, goals, budget, timeline, and required features, then use the Book a Call button.",
+  qualificationCore: QUALIFICATION_CORE,
+  qualificationNextStep: `${QUALIFICATION_CORE.replace(
+    /\.$/,
+    ""
+  )}, then use the Book a Call button.`,
+  quoteViaBookCall:
+    "For upper-range quotes, use the Book a Call button and share your business type, goals, budget, timeline, and required features. We can confirm scope and next steps on the call.",
+  toolSyntax:
+    "That is internal tool syntax, not something you need to type. Just write your request normally and I will handle it. Use the Book a Call button on this page.",
+  directCoding:
+    "This assistant does not do coding work directly. I can help you scope the project and next steps. Share business type, goals, budget, timeline, and required features, then use the Book a Call button.",
+  techStack:
+    "We build websites in React and Next.js. For apps, we use Swift, React Native, and Flutter depending on the product. We use modern coding tools for strong performance and scalable quality.",
+  aiRole:
+    "The AI agent handles light questions plus booking and scheduling calls/meetings. It does not do coding work.",
+  bookingIntent:
+    "Perfect. Use the Book a Call button on this page to choose a time. In the project summary, mention your classes, what you need, and your preferred timeline.",
+  pricingGuide:
+    "Pricing guide: basic 1-page site is GBP 600-1000. Advanced websites are GBP 1000-3000+ depending on features and timeline. App MVPs are GBP 1000-2000. Full native apps with database + APIs are usually GBP 3000-8000+. For exact upper-range pricing, use the Book a Call button.",
+  timelineGuide:
+    "Typical timelines: basic website around 1 week. Advanced websites usually 2-4 weeks, sometimes longer for complex features. App MVPs are often 2-8 weeks. Native apps usually take longer than cross-platform. Use the Book a Call button to lock the scope and timeline.",
+  services:
+    "We build business websites, mobile apps, custom systems, booking automations, and MVP prototypes. If you want, I can recommend the best option for your project, or you can use the Book a Call button.",
+  servicesCompact:
+    "We build websites, apps, custom systems, booking automations, and MVPs. Share your goals and timeline, then use the Book a Call button.",
+  estimateFallback:
+    "I can estimate pricing once the scope is confirmed. Share key requirements, then use the Book a Call button.",
+  providerFallback:
+    "I can still help you get started. Share business type, goals, budget, timeline, and required features in one message, then use the Book a Call button.",
+  quoteScopeConfirm: "Use the Book a Call button to discuss further and confirm the project scope.",
+  quoteCaptured:
+    "Your quote request has been captured. Please use the Book a Call button on this page to discuss further and confirm the project scope.",
 };
 
 const SERVICES: Service[] = [
   {
-    name: "Websites (React / Next.js)",
-    summary: "Fast, scalable websites with clean UX and strong performance.",
+    name: "Business Websites",
+    summary: "High-converting websites built for your audience and goals.",
   },
   {
-    name: "Apps (Swift / React Native / Flutter)",
-    summary:
-      "Cross-platform MVPs and native mobile apps based on your product goals.",
+    name: "Mobile Apps",
+    summary: "Customer-facing apps for bookings, memberships, and digital services.",
   },
   {
-    name: "API + Database Setup",
-    summary: "Backend APIs, databases, file handling, and integration workflows.",
+    name: "Custom Systems",
+    summary: "Internal tools, integrations, and data workflows for daily operations.",
   },
   {
-    name: "AI Agent Setup",
-    summary:
-      "Lead-qualification assistant for light questions, bookings, and scheduling.",
+    name: "Booking and Automation",
+    summary: "Automated booking, scheduling, and lead follow-up experiences.",
   },
   {
     name: "MVP Prototypes",
-    summary:
-      "Rapid prototypes and validation builds before full production rollout.",
+    summary: "Fast validation builds before full-scale development.",
   },
 ];
 
@@ -142,18 +189,29 @@ Contact and booking details:
 - Email: manager@nathansomevi.com
 - Phone/WhatsApp: +44 7846 677463
 - Preferred contact: WhatsApp
-- Calendar booking link: https://calendar.google.com/calendar/u/0?cid=NGRmYTk5NjFlZDc5YWQ0MjhhYzQ1YmRhMjNkZTdhNDczNTBkMzNiMzA4YmE4MDAzMGU5ZGQzYzVjY2Y1NThkYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t
+- Booking: ${CONTACT.booking}
 - Working hours: 09:00-18:00 UK time (after-hours calls possible when necessary).
 
 Behavior rules:
 - Keep answers short and direct.
 - Ask at most one clarification question at a time.
+- Use a warm, human tone: acknowledge the idea before asking for details.
+- In early discovery, avoid jumping straight to budget unless the user asks for pricing.
+- Prefer asking about goals/outcomes before budget on first qualification turns.
 - Never invent tools, frameworks, prices, deadlines, or policies.
 - Never guarantee outcomes or fixed delivery before confirming scope.
 - Do not mention WordPress unless user explicitly asks for WordPress.
 - Never output raw tool/function syntax (for example: <function=...>...</function>).
-- If a request is specific/unclear or needs confirmation, direct to: "Contact us."
+- Never ask a visitor to share their email just so you can send a quote.
+- For quote follow-up, always direct to: "${CONTACT.booking}"
+- If a request is specific/unclear or needs confirmation, direct to: "${CONTACT.booking}"
 - For quote requests, collect required fields before giving upper-range guidance.
+
+Canonical response policy (must match site hardcoded responses):
+- Booking intent: "${RESPONSE_POLICY.bookingIntent}"
+- Services (non-technical): "${RESPONSE_POLICY.services}"
+- Pricing if details are missing: ask for missing fields, then direct to "${CONTACT.booking}".
+- Only provide tech stack details when user explicitly asks for stack/framework/tech.
 `;
 
 const providerModeFromEnv = (process.env.AGENT_PROVIDER ?? "auto").toLowerCase();
@@ -173,6 +231,21 @@ const MAX_TOOL_ROUNDS = 4;
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 20;
+const FORMATTER_MAX_SUMMARY_CHARS = 280;
+const FORMATTER_MAX_QUESTION_CHARS = 200;
+const FORMATTER_MAX_REPLY_CHARS = 420;
+const BOOK_CALL_FOLLOW_UP_QUESTION = "Would you like to book a call?";
+const FORMATTER_ALLOWED_MISSING_FIELDS = new Set([
+  "name",
+  "email",
+  "business type",
+  "budget",
+  "timeline",
+  "required features",
+  "scope",
+  "goals",
+  "availability",
+]);
 const rateBuckets = new Map<string, RateBucket>();
 
 const quoteSubmissions: Array<{
@@ -222,7 +295,7 @@ const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: "get_booking_details",
     description:
-      "Return email, phone, WhatsApp preference, calendar link, and booking instructions.",
+      "Return email, phone, WhatsApp preference, working hours, and booking instructions.",
     parameters: {
       type: "object",
       properties: {},
@@ -468,15 +541,49 @@ function getMissingQualificationFields(
   return missing;
 }
 
-function normalizeUserFacingReply(reply: string): string {
+function hasTechStackIntent(text: string): boolean {
+  return includesAny(text, [
+    "tech stack",
+    "what stack",
+    "what do you use",
+    "built with",
+    "which framework",
+    "which tech",
+  ]);
+}
+
+function hasBookingIntent(text: string): boolean {
+  return (
+    /\bbook(?:ing)?\b/.test(text) ||
+    /\bschedule\b/.test(text) ||
+    /\bmeeting\b/.test(text) ||
+    /\bappointment\b/.test(text) ||
+    /\bavailable times?\b/.test(text) ||
+    /\btime slots?\b/.test(text)
+  );
+}
+
+function filterBehaviorResponse(
+  reply: string,
+  latestUserMessage: string,
+  messages: ChatMessage[] = []
+): string {
   const normalizedWhitespace = reply.replace(/\s+/g, " ").trim();
   if (!normalizedWhitespace) {
     return "";
   }
 
-  let normalized = normalizedWhitespace
-    .replace(/\bbook a call\b/gi, "use Contact")
-    .replace(/\?\./g, "?");
+  const normalized = normalizedWhitespace.replace(/\?\./g, "?");
+  const latestUserText = latestUserMessage.toLowerCase();
+  const userAskedTechStack = hasTechStackIntent(latestUserText);
+  const userAskedBooking = hasBookingIntent(latestUserText);
+  const qualificationState = messages.length ? extractQualificationState(messages) : null;
+  const hasBudgetContext = Boolean(qualificationState?.budget);
+
+  // Keep booking replies simple and action-oriented unless stack details are explicitly requested.
+  if (userAskedBooking && !userAskedTechStack) {
+    return RESPONSE_POLICY.bookingIntent;
+  }
 
   if (
     /<function=/i.test(normalized) ||
@@ -485,15 +592,405 @@ function normalizeUserFacingReply(reply: string): string {
       normalized
     )
   ) {
-    return "I can help with scope, pricing, and next steps. Share your business type, goals, budget, timeline, and required features, then use Contact.";
+    return RESPONSE_POLICY.scopeAndNextSteps;
+  }
+
+  const asksForEmailToSendQuote =
+    /\b(?:provide|share)(?:\s+me)?(?:\s+with)?\s+your\s+email(?:\s+address)?\b/i.test(
+      normalized
+    ) &&
+    /\bquote\b/i.test(normalized);
+  const framesEmailAsQuoteStep =
+    /\byour\s+email(?:\s+address)?\b/i.test(normalized) &&
+    /\b(?:send|share|provide)\b/i.test(normalized) &&
+    /\bquote\b/i.test(normalized);
+  if (asksForEmailToSendQuote || framesEmailAsQuoteStep) {
+    return RESPONSE_POLICY.quoteViaBookCall;
+  }
+
+  if (!userAskedTechStack) {
+    const looksLikeTechnicalServiceDump =
+      /\bservices?:\b/i.test(normalized) &&
+      /\b(?:react|next\.?js|swift|react native|flutter|api|database)\b/i.test(normalized);
+    if (looksLikeTechnicalServiceDump) {
+      return RESPONSE_POLICY.services;
+    }
+  }
+
+  const abruptBudgetPrompt =
+    /\b(?:to get started|to start)\b/i.test(normalized) &&
+    /\b(?:rough|approx(?:imate)?|ballpark)?\s*budget\b/i.test(normalized);
+  if (abruptBudgetPrompt && !hasBudgetContext) {
+    return "Love the idea for your business. If you are happy to share, what budget range are you aiming for? That helps me suggest the best next step.";
+  }
+
+  const abruptFeaturePrompt =
+    /\bkey features?\b/i.test(normalized) &&
+    /\bwebsite\b/i.test(normalized) &&
+    /\bcan you please share\b/i.test(normalized);
+  if (abruptFeaturePrompt) {
+    return "Great start. What are the top 2-3 features you want first? For example: class schedule, booking, payments, testimonials, or a contact form.";
   }
 
   const wordCount = normalized.split(/\s+/).filter(Boolean).length;
   if (wordCount < 4 || /^contact us\.?$/i.test(normalized)) {
-    return "Share your business type, goals, budget, timeline, and required features in one message, then use Contact.";
+    return RESPONSE_POLICY.qualificationNextStep;
   }
 
   return normalized;
+}
+
+function normalizeWhitespace(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function clampText(value: string, maxChars: number): string {
+  if (maxChars <= 0) {
+    return "";
+  }
+  return normalizeWhitespace(value).slice(0, maxChars).trim();
+}
+
+function truncateAtWordBoundary(value: string, maxChars: number): string {
+  const normalized = normalizeWhitespace(value);
+  if (!normalized) {
+    return "";
+  }
+  if (normalized.length <= maxChars) {
+    return normalized;
+  }
+
+  const sliced = normalized.slice(0, maxChars + 1);
+  const lastSpace = sliced.lastIndexOf(" ");
+  const cut =
+    lastSpace >= Math.floor(maxChars * 0.55) ? sliced.slice(0, lastSpace) : sliced.slice(0, maxChars);
+  return `${cut.trim()}...`;
+}
+
+function appendBookCallFollowUp(reply: string): string {
+  const normalized = normalizeWhitespace(reply);
+  if (!normalized) {
+    return clampText(BOOK_CALL_FOLLOW_UP_QUESTION, FORMATTER_MAX_REPLY_CHARS);
+  }
+
+  if (/\bwould you like to book a call\?/i.test(normalized)) {
+    return clampText(normalized, FORMATTER_MAX_REPLY_CHARS);
+  }
+
+  const maxBaseChars = FORMATTER_MAX_REPLY_CHARS - BOOK_CALL_FOLLOW_UP_QUESTION.length - 1;
+  if (maxBaseChars <= 0) {
+    return clampText(BOOK_CALL_FOLLOW_UP_QUESTION, FORMATTER_MAX_REPLY_CHARS);
+  }
+
+  const base = clampText(normalized, maxBaseChars);
+  if (!base) {
+    return clampText(BOOK_CALL_FOLLOW_UP_QUESTION, FORMATTER_MAX_REPLY_CHARS);
+  }
+
+  return `${base} ${BOOK_CALL_FOLLOW_UP_QUESTION}`;
+}
+
+function toFormatterTone(value: unknown): FormattedTone {
+  if (typeof value !== "string") {
+    return "friendly_professional";
+  }
+
+  const normalized = value.toLowerCase().replace(/[-\s]+/g, "_").trim();
+  if (normalized === "friendly_professional") {
+    return "friendly_professional";
+  }
+
+  return "friendly_professional";
+}
+
+function normalizeMissingFieldArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const cleaned = value
+    .map((item) => (typeof item === "string" ? item : ""))
+    .map((item) => item.toLowerCase().replace(/[_-]/g, " ").replace(/\s+/g, " ").trim())
+    .filter((item) => FORMATTER_ALLOWED_MISSING_FIELDS.has(item));
+
+  return Array.from(new Set(cleaned));
+}
+
+function questionForMissingField(field: string): string {
+  if (field === "scope") {
+    return "What is the core scope for version one?";
+  }
+  if (field === "goals") {
+    return "What is the main outcome you want this project to deliver?";
+  }
+  if (field === "availability") {
+    return "When are you available to start and review milestones?";
+  }
+  if (field === "name") {
+    return "What name should I use for your project request?";
+  }
+  if (field === "email") {
+    return "What email should I use for follow-up?";
+  }
+  if (field === "business type") {
+    return "What type of business or organisation is this for?";
+  }
+  if (field === "budget") {
+    return "What budget range are you aiming for?";
+  }
+  if (field === "timeline") {
+    return "What timeline are you targeting for launch?";
+  }
+  if (field === "required features") {
+    return "What are the top features you need first?";
+  }
+
+  return "What detail should we confirm next?";
+}
+
+function splitSummaryAndQuestion(text: string): {
+  summary: string;
+  nextQuestion: string;
+} {
+  const normalized = normalizeWhitespace(text);
+  if (!normalized) {
+    return { summary: "", nextQuestion: "" };
+  }
+
+  const segments = normalized.split(/(?<=[.!?])\s+/).filter(Boolean);
+  if (segments.length >= 2) {
+    const tail = segments[segments.length - 1] ?? "";
+    if (tail.endsWith("?")) {
+      const summary = truncateAtWordBoundary(
+        segments.slice(0, -1).join(" "),
+        FORMATTER_MAX_SUMMARY_CHARS
+      );
+      return {
+        summary: summary || truncateAtWordBoundary(normalized, FORMATTER_MAX_SUMMARY_CHARS),
+        nextQuestion: truncateAtWordBoundary(tail, FORMATTER_MAX_QUESTION_CHARS),
+      };
+    }
+  }
+
+  return {
+    summary: truncateAtWordBoundary(normalized, FORMATTER_MAX_SUMMARY_CHARS),
+    nextQuestion: "",
+  };
+}
+
+function extractJsonCandidate(text: string): string | null {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+    return trimmed;
+  }
+
+  const fencedMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fencedMatch?.[1]) {
+    const fenced = fencedMatch[1].trim();
+    if (fenced.startsWith("{") && fenced.endsWith("}")) {
+      return fenced;
+    }
+  }
+
+  const firstBrace = trimmed.indexOf("{");
+  const lastBrace = trimmed.lastIndexOf("}");
+  if (firstBrace >= 0 && lastBrace > firstBrace) {
+    return trimmed.slice(firstBrace, lastBrace + 1);
+  }
+
+  return null;
+}
+
+function parseJsonObject(text: string): Record<string, unknown> | null {
+  const candidate = extractJsonCandidate(text);
+  if (!candidate) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(candidate);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      return parsed as Record<string, unknown>;
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+function parseStructuredFormatterPayload(rawReply: string): {
+  tone: FormattedTone;
+  summary: string;
+  missingFields: string[];
+  nextQuestion: string;
+  replyText: string;
+  hasMissingFieldsKey: boolean;
+} | null {
+  const parsed = parseJsonObject(rawReply);
+  if (!parsed) {
+    return null;
+  }
+
+  const summarySource = parsed.summary ?? parsed.message ?? parsed.reply;
+  const summary = truncateAtWordBoundary(
+    typeof summarySource === "string" ? summarySource : "",
+    FORMATTER_MAX_SUMMARY_CHARS
+  );
+  if (!summary) {
+    return null;
+  }
+
+  const hasMissingFieldsKey =
+    Object.prototype.hasOwnProperty.call(parsed, "missing_fields") ||
+    Object.prototype.hasOwnProperty.call(parsed, "missingFields");
+  const rawMissing = parsed.missing_fields ?? parsed.missingFields;
+  if (hasMissingFieldsKey && !Array.isArray(rawMissing)) {
+    return null;
+  }
+
+  const nextQuestionSource = parsed.next_question ?? parsed.nextQuestion;
+  if (
+    nextQuestionSource !== undefined &&
+    nextQuestionSource !== null &&
+    typeof nextQuestionSource !== "string"
+  ) {
+    return null;
+  }
+
+  const replySource = parsed.reply;
+  if (replySource !== undefined && replySource !== null && typeof replySource !== "string") {
+    return null;
+  }
+
+  return {
+    tone: toFormatterTone(parsed.tone),
+    summary,
+    missingFields: normalizeMissingFieldArray(rawMissing),
+    nextQuestion: truncateAtWordBoundary(
+      typeof nextQuestionSource === "string" ? nextQuestionSource : "",
+      FORMATTER_MAX_QUESTION_CHARS
+    ),
+    replyText: truncateAtWordBoundary(
+      typeof replySource === "string" ? replySource : "",
+      FORMATTER_MAX_REPLY_CHARS
+    ),
+    hasMissingFieldsKey,
+  };
+}
+
+function buildFallbackFormattedPayload(
+  rawReply: string,
+  latestUserMessage: string,
+  messages: ChatMessage[]
+): FormattedAgentPayload {
+  const filteredReply = filterBehaviorResponse(rawReply, latestUserMessage, messages);
+  const qualificationState = extractQualificationState(messages);
+  const missingFields = getMissingQualificationFields(qualificationState);
+  const split = splitSummaryAndQuestion(filteredReply);
+  const summary =
+    split.summary || truncateAtWordBoundary(RESPONSE_POLICY.providerFallback, FORMATTER_MAX_SUMMARY_CHARS);
+  const nextQuestion = split.nextQuestion
+    ? split.nextQuestion
+    : missingFields.length
+      ? questionForMissingField(missingFields[0] ?? "")
+      : BOOK_CALL_FOLLOW_UP_QUESTION;
+
+  const replyBase =
+    truncateAtWordBoundary(filteredReply, FORMATTER_MAX_REPLY_CHARS) ||
+    truncateAtWordBoundary(
+      normalizeWhitespace([summary, nextQuestion].filter(Boolean).join(" ")),
+      FORMATTER_MAX_REPLY_CHARS
+    ) ||
+    RESPONSE_POLICY.providerFallback;
+  const reply = appendBookCallFollowUp(replyBase);
+
+  return {
+    tone: "friendly_professional",
+    summary,
+    missing_fields: missingFields,
+    next_question: nextQuestion,
+    reply,
+    format_source: "fallback",
+  };
+}
+
+function formatAgentResponse(
+  rawReply: string,
+  latestUserMessage: string,
+  messages: ChatMessage[]
+): FormattedAgentPayload {
+  const fallback = buildFallbackFormattedPayload(rawReply, latestUserMessage, messages);
+  const parsed =
+    parseStructuredFormatterPayload(rawReply) ??
+    parseStructuredFormatterPayload(fallback.reply);
+  if (!parsed) {
+    return fallback;
+  }
+
+  const missingFields = parsed.hasMissingFieldsKey
+    ? parsed.missingFields
+    : fallback.missing_fields;
+  const nextQuestion =
+    parsed.nextQuestion ||
+    (missingFields.length
+      ? questionForMissingField(missingFields[0] ?? "")
+      : BOOK_CALL_FOLLOW_UP_QUESTION);
+  const mappedReplyRaw =
+    parsed.replyText || normalizeWhitespace([parsed.summary, nextQuestion].filter(Boolean).join(" "));
+  const mappedReply = filterBehaviorResponse(mappedReplyRaw, latestUserMessage, messages);
+  const safeReply = appendBookCallFollowUp(
+    truncateAtWordBoundary(mappedReply, FORMATTER_MAX_REPLY_CHARS) || fallback.reply
+  );
+
+  return {
+    tone: parsed.tone,
+    summary: parsed.summary,
+    missing_fields: missingFields,
+    next_question: nextQuestion,
+    reply: safeReply,
+    format_source: "schema",
+  };
+}
+
+function buildProviderInstructions(messages: ChatMessage[]): string {
+  const qualification = extractQualificationState(messages);
+  const knownFields = [
+    qualification.name ? "name" : "",
+    qualification.email ? "email" : "",
+    qualification.businessType ? "business type" : "",
+    qualification.budget ? "budget" : "",
+    qualification.timeline ? "timeline" : "",
+    qualification.requiredFeatures ? "required features" : "",
+  ].filter(Boolean);
+  const missingFields = getMissingQualificationFields(qualification);
+  const latestUser = clampMessage(findLatestUserMessage(messages));
+
+  return `${SYSTEM_PROMPT}
+
+Request context:
+- Latest user message: ${JSON.stringify(latestUser)}
+- Known qualification fields: ${
+    knownFields.length ? knownFields.join(", ") : "none"
+  }
+- Missing qualification fields: ${
+    missingFields.length ? missingFields.join(", ") : "none"
+  }
+
+Output contract:
+- Prefer a JSON object (no markdown) with keys:
+  - tone: "friendly_professional"
+  - summary: string
+  - missing_fields: string[]
+  - next_question: string
+- Ask at most one follow-up question.
+- If details are complete, set missing_fields to [] and next_question to "".
+- If JSON output is not possible, return concise plain text in a friendly professional tone.
+`;
 }
 
 function getStaticReply(userText: string, messages: ChatMessage[]): string | null {
@@ -507,7 +1004,7 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
       "</function>",
     ])
   ) {
-    return "That is internal tool syntax, not something you need to type. Just write your request normally and I will handle it. Contact us.";
+    return RESPONSE_POLICY.toolSyntax;
   }
 
   const asksDirectCoding = includesAny(text, [
@@ -523,26 +1020,24 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
     "ship the app code",
   ]);
   if (asksDirectCoding) {
-    return "This assistant does not do coding work directly. I can help you scope the project and next steps. Share business type, goals, budget, timeline, and required features, then use Contact.";
+    return RESPONSE_POLICY.directCoding;
   }
 
-  const asksTechStack = includesAny(text, [
-    "tech stack",
-    "what stack",
-    "what do you use",
-    "built with",
-    "which framework",
-    "which tech",
-  ]);
+  const asksTechStack = hasTechStackIntent(text);
   if (asksTechStack) {
-    return "We build websites in React and Next.js. For apps, we use Swift, React Native, and Flutter depending on the product. We use modern coding tools for strong performance and scalable quality.";
+    return RESPONSE_POLICY.techStack;
   }
 
   const asksAiRole =
     includesAny(text, ["ai agent", "assistant"]) &&
     includesAny(text, ["code", "coding", "build", "develop"]);
   if (asksAiRole) {
-    return "The AI agent handles light questions plus booking and scheduling calls/meetings. It does not do coding work.";
+    return RESPONSE_POLICY.aiRole;
+  }
+
+  const asksBooking = hasBookingIntent(text);
+  if (asksBooking) {
+    return RESPONSE_POLICY.bookingIntent;
   }
 
   const asksPricing = includesAny(text, [
@@ -557,10 +1052,10 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
     const missing = getMissingQualificationFields(state);
 
     if (missing.length) {
-      return `For an upper-range quote, please share: ${missing.join(", ")}. Then use Contact.`;
+      return `For an upper-range quote, please share: ${missing.join(", ")}. Then ${CONTACT.booking}`;
     }
 
-    return "Pricing guide: basic 1-page site is GBP 600-1000. Advanced websites are GBP 1000-3000+ depending on features and timeline. App MVPs are GBP 1000-2000. Full native apps with database + APIs are usually GBP 3000-8000+. For exact upper-range pricing, use Contact.";
+    return RESPONSE_POLICY.pricingGuide;
   }
 
   const asksTimeline = includesAny(text, [
@@ -572,7 +1067,7 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
     "how quick",
   ]);
   if (asksTimeline) {
-    return "Typical timelines: basic website around 1 week. Advanced websites usually 2-4 weeks, sometimes longer for complex features. App MVPs are often 2-8 weeks. Native apps usually take longer than cross-platform. Use Contact to lock the scope and timeline.";
+    return RESPONSE_POLICY.timelineGuide;
   }
 
   const asksServices = includesAny(text, [
@@ -582,14 +1077,13 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
     "what do you offer",
   ]);
   if (asksServices) {
-    return "We build websites (React/Next.js), mobile apps (Swift/React Native/Flutter), API + database setups, AI agents for bookings/scheduling, and MVP prototypes. Use Contact and we can recommend the best setup for your project.";
+    return RESPONSE_POLICY.services;
   }
 
   const asksContact = includesAny(text, [
     "contact",
     "whatsapp",
     "book a call",
-    "booking",
     "schedule",
     "meeting",
     "calendar",
@@ -599,7 +1093,7 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
     "reach you",
   ]);
   if (asksContact) {
-    return `Contact: ${CONTACT.email} | ${CONTACT.phone} (WhatsApp preferred). Working hours: ${CONTACT.workingHours} Calendar: ${CONTACT.calendar} Use Contact.`;
+    return `Contact: ${CONTACT.email} | ${CONTACT.phone} (WhatsApp preferred). Working hours: ${CONTACT.workingHours} ${CONTACT.booking}`;
   }
 
   return null;
@@ -608,8 +1102,7 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
 function getServices() {
   return {
     services: SERVICES,
-    start:
-      "Best start: share business type, goals, budget, timeline, and required features in one message.",
+    start: RESPONSE_POLICY.qualificationCore,
   };
 }
 
@@ -726,7 +1219,7 @@ function estimatePriceRange(args: EstimateArgs) {
     },
     estimatedTimeline,
     note:
-      "Directional estimate only. Upper-range quotes require name, email, business type, budget, timeline, and required features. Use Contact to confirm project scope.",
+      `Directional estimate only. Upper-range quotes require name, email, business type, budget, timeline, and required features. ${RESPONSE_POLICY.quoteScopeConfirm}`,
   };
 }
 
@@ -736,7 +1229,7 @@ function getBookingDetails() {
     steps: [
       "Send name, email, business type, budget, timeline, and required features.",
       "WhatsApp is preferred for quick coordination.",
-      "Use Contact to discuss further and confirm the project scope.",
+      RESPONSE_POLICY.quoteScopeConfirm,
     ],
   };
 }
@@ -760,7 +1253,7 @@ function submitQuoteRequest(args: QuoteArgs) {
   if (missing.length) {
     return {
       ok: false,
-      error: `Please share ${missing.join(", ")} before we quote the upper range. Use Contact.`,
+      error: `Please share ${missing.join(", ")} before we quote the upper range. ${CONTACT.booking}`,
       contact: CONTACT,
     };
   }
@@ -782,8 +1275,7 @@ function submitQuoteRequest(args: QuoteArgs) {
 
   return {
     ok: true,
-    message:
-      "Your quote request has been captured. Please use the Contact button on this webpage to discuss further and confirm the project scope.",
+    message: RESPONSE_POLICY.quoteCaptured,
     contact: CONTACT,
   };
 }
@@ -848,17 +1340,16 @@ function stringifyBookingDetails(output: unknown): string {
     email: contact?.email ?? CONTACT.email,
     phone: contact?.phone ?? CONTACT.phone,
     whatsapp: contact?.whatsapp ?? CONTACT.whatsapp,
-    calendar: contact?.calendar ?? CONTACT.calendar,
     workingHours: contact?.workingHours ?? CONTACT.workingHours,
     booking: contact?.booking ?? CONTACT.booking,
   };
 
-  return `Contact: ${resolved.email} | ${resolved.phone} (WhatsApp: ${resolved.whatsapp}). Working hours: ${resolved.workingHours} Calendar: ${resolved.calendar} ${resolved.booking}`;
+  return `Contact: ${resolved.email} | ${resolved.phone} (WhatsApp: ${resolved.whatsapp}). Working hours: ${resolved.workingHours} ${resolved.booking}`;
 }
 
 function stringifyEstimateRange(output: unknown): string {
   if (!output || typeof output !== "object") {
-    return "I can estimate pricing once the scope is confirmed. Share key requirements, then use Contact.";
+    return RESPONSE_POLICY.estimateFallback;
   }
 
   const typed = output as {
@@ -878,7 +1369,7 @@ function stringifyEstimateRange(output: unknown): string {
   const note = typeof typed.note === "string" ? typed.note : "";
 
   if (min === null || max === null) {
-    return "I can estimate pricing once the scope is confirmed. Share key requirements, then use Contact.";
+    return RESPONSE_POLICY.estimateFallback;
   }
 
   return `Estimated range: ${currency} ${min}-${max}. Timeline: ${timeline || "depends on scope"}. ${note}`.trim();
@@ -886,7 +1377,7 @@ function stringifyEstimateRange(output: unknown): string {
 
 function stringifyServicesOutput(output: unknown): string {
   if (!output || typeof output !== "object") {
-    return "We build websites, apps, APIs, and MVPs. Share your goals and timeline, then use Contact.";
+    return RESPONSE_POLICY.servicesCompact;
   }
 
   const typed = output as {
@@ -902,7 +1393,7 @@ function stringifyServicesOutput(output: unknown): string {
   const start = typeof typed.start === "string" ? typed.start : "";
 
   if (!names.length) {
-    return "We build websites, apps, APIs, and MVPs. Share your goals and timeline, then use Contact.";
+    return RESPONSE_POLICY.servicesCompact;
   }
 
   return `Services: ${names.join(", ")}. ${start}`.trim();
@@ -1238,10 +1729,11 @@ function buildProviderMessages(messages: ChatMessage[]) {
 async function generateWithOpenAI(messages: ChatMessage[]): Promise<ProviderResult> {
   const tools = buildResponsesTools();
   const input = buildResponsesInput(messages);
+  const instructions = buildProviderInstructions(messages);
 
   const first = await callOpenAIResponses({
     model: OPENAI_MODEL,
-    instructions: SYSTEM_PROMPT,
+    instructions,
     input,
     tools,
     tool_choice: "auto",
@@ -1278,7 +1770,7 @@ async function generateWithOpenAI(messages: ChatMessage[]): Promise<ProviderResu
 
     const followUp = await callOpenAIResponses({
       model: OPENAI_MODEL,
-      instructions: SYSTEM_PROMPT,
+      instructions,
       previous_response_id: (responseJson as { id?: unknown }).id,
       input: toolOutputs,
       tools,
@@ -1302,13 +1794,14 @@ async function generateWithOpenAI(messages: ChatMessage[]): Promise<ProviderResu
   }
 
   const resolved = resolveInlineToolSyntax(reply);
-  return { ok: true, reply: normalizeUserFacingReply(resolved ?? reply) };
+  return { ok: true, reply: resolved ?? reply };
 }
 
 async function generateWithGroq(messages: ChatMessage[]): Promise<ProviderResult> {
   const tools = buildChatTools();
+  const instructions = buildProviderInstructions(messages);
   const completionMessages: Array<Record<string, unknown>> = [
-    { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: instructions },
     ...buildProviderMessages(messages),
   ];
 
@@ -1351,7 +1844,7 @@ async function generateWithGroq(messages: ChatMessage[]): Promise<ProviderResult
       const resolved = resolveInlineToolSyntax(assistantText);
       return {
         ok: true,
-        reply: normalizeUserFacingReply(resolved ?? assistantText),
+        reply: resolved ?? assistantText,
       };
     }
 
@@ -1399,7 +1892,7 @@ async function generateWithGroq(messages: ChatMessage[]): Promise<ProviderResult
   const resolved = resolveInlineToolSyntax(text);
   return {
     ok: true,
-    reply: normalizeUserFacingReply(resolved ?? text),
+    reply: resolved ?? text,
   };
 }
 
@@ -1442,7 +1935,11 @@ export async function POST(req: NextRequest) {
 
   const staticReply = getStaticReply(latestUserMessage, allMessages);
   if (staticReply) {
-    return NextResponse.json({ reply: staticReply });
+    const formatted = formatAgentResponse(staticReply, latestUserMessage, allMessages);
+    return NextResponse.json({
+      reply: formatted.reply,
+      formatted,
+    });
   }
 
   const mode = getProviderMode();
@@ -1480,11 +1977,24 @@ export async function POST(req: NextRequest) {
 
   if (!result.ok) {
     console.error("Agent provider failure", result.error ?? "Unknown provider error.");
+    const formatted = formatAgentResponse(
+      RESPONSE_POLICY.providerFallback,
+      latestUserMessage,
+      allMessages
+    );
     return NextResponse.json({
-      reply:
-        "I can still help you get started. Share business type, goals, budget, timeline, and required features in one message, then use Contact.",
+      reply: formatted.reply,
+      formatted,
     });
   }
 
-  return NextResponse.json({ reply: result.reply });
+  const formatted = formatAgentResponse(
+    result.reply || RESPONSE_POLICY.providerFallback,
+    latestUserMessage,
+    allMessages
+  );
+  return NextResponse.json({
+    reply: formatted.reply,
+    formatted,
+  });
 }

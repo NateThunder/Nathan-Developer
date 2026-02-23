@@ -41,6 +41,35 @@ Notes:
 
 You can start by copying `.env.example` to `.env.local`.
 
+## Google Calendar Booking Setup
+
+The contact popup can book real meetings through Google Calendar API.
+
+Add these variables to `.env.local`:
+
+```bash
+GOOGLE_SERVICE_ACCOUNT_EMAIL=service-account@project-id.iam.gserviceaccount.com
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
+
+BOOKING_TIMEZONE=Europe/London
+BOOKING_MEETING_MINUTES=30
+BOOKING_SLOT_DAYS=14
+BOOKING_WORKDAY_START=09:00
+BOOKING_WORKDAY_END=18:00
+```
+
+Setup steps:
+1. Create a Google Cloud service account and generate a JSON key.
+2. Enable Google Calendar API in that Google Cloud project.
+3. Copy service account email and private key into your env vars.
+4. Share your booking calendar with the service account email (`Make changes to events`).
+5. Use that calendar ID as `GOOGLE_CALENDAR_ID`.
+
+Routes:
+- `GET /api/booking/slots` returns available slots.
+- `POST /api/booking` creates an event. Invite emails from service accounts require Google Workspace Domain-Wide Delegation.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More

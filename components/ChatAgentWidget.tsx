@@ -31,7 +31,12 @@ const INITIAL_MESSAGE: ChatMessage = {
 
 function shouldShowBookCallPopup(message: string) {
   const text = message.toLowerCase();
-  return text.includes("book a call");
+  return (
+    text.includes("book a call") ||
+    text.includes("use contact") ||
+    text.includes("contact us") ||
+    text.includes("contact:")
+  );
 }
 
 export function ChatAgentWidget() {
@@ -86,9 +91,15 @@ export function ChatAgentWidget() {
         }),
       });
 
-      const payload = (await res.json()) as { reply?: string; error?: string };
+      const payload = (await res.json()) as {
+        reply?: string;
+        error?: string;
+        formatted?: {
+          reply?: string;
+        };
+      };
       const reply =
-        (payload.reply || "").trim() ||
+        (payload.formatted?.reply || payload.reply || "").trim() ||
         "I can still help. Please share your project goal, timeline, and page count.";
 
       setMessages((prev) => [
@@ -110,7 +121,7 @@ export function ChatAgentWidget() {
           id: makeId(),
           role: "assistant",
           content:
-            "I'm having trouble connecting right now. Use Book a call and we can continue there.",
+            "I'm having trouble connecting right now. Use Contact and we can continue there.",
         },
       ]);
       setError("Network error while contacting the assistant.");
@@ -184,7 +195,7 @@ export function ChatAgentWidget() {
                   {showBookCallPopup ? (
                     <div className="max-w-[88%]">
                       <BookCallButton
-                        label="Contact now"
+                        label="Book a Call Now"
                         className={`pixel-notch inline-flex w-full items-center justify-center rounded-full border-2 border-[#8a3f2f] bg-[var(--color-accent-warm)] px-4 py-2.5 text-sm font-semibold text-[#1d1b1a] shadow-[0_8px_16px_rgba(20,8,4,0.32)] transition hover:brightness-105 ${FOCUS_RING}`}
                       />
                     </div>
