@@ -4,28 +4,41 @@ import { SectionVectorArt } from "@/components/SectionVectorArt";
 type Project = {
   name: string;
   url: string;
-  screenshot: string;
+  screenshot?: string;
   alt: string;
 };
 
 const projects: Project[] = [
   {
-    name: "stem-player",
-    url: "https://stem-player.netlify.app/",
-    screenshot: "/work/stem-player.png",
-    alt: "Stem Player website screenshot",
-  },
-  {
     name: "team-church-glasgow",
-    url: "https://team-church-glasgow.netlify.app/",
+    url: "https://teamchurchglasgow.com/",
     screenshot: "/work/team-church-glasgow.png",
     alt: "Team Church Glasgow website screenshot",
+  },
+  {
+    name: "skara-ceilidh-band",
+    url: "https://skaraceilidh.com/",
+    screenshot: "/work/skara-ceilidh-band.png",
+    alt: "Skara Ceilidh Band website screenshot",
+  },
+  {
+    name: "celtic-worship",
+    url: "https://celticworship.netlify.app/",
+    screenshot: "/work/celtic-worship.png",
+    alt: "Celtic Worship website screenshot",
   },
   {
     name: "zerua",
     url: "https://zerua.netlify.app/",
     screenshot: "/work/zerua-dashboard.png",
     alt: "Zerua website screenshot",
+  },
+  
+  {
+    name: "stem-player",
+    url: "https://stem-player.netlify.app/",
+    screenshot: "/work/stem-player.png",
+    alt: "Stem Player website screenshot",
   },
 ];
 
@@ -35,10 +48,12 @@ const FOCUS_RING =
 export function WorkShowcase() {
   return (
     <section
-      id="work"
-      className="scroll-mt-24 border-y border-[var(--color-border)] bg-[var(--color-bg-elevated)] py-12 sm:py-16 lg:py-20"
+      className="border-y border-[var(--color-border)] bg-[var(--color-bg-elevated)] py-12 sm:py-16 lg:py-20"
     >
-      <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8">
+      <div
+        id="work"
+        className="mx-auto w-full max-w-[1200px] scroll-mt-24 px-4 sm:px-6 lg:px-8"
+      >
         <div className="grid items-start gap-6 lg:grid-cols-[1fr_auto]">
           <div className="max-w-[680px]">
             <p className="mono-label text-[11px] text-[var(--color-accent-warm)]">
@@ -73,13 +88,26 @@ export function WorkShowcase() {
                 </div>
 
                 <div className="relative z-[80] aspect-[16/9] overflow-hidden rounded-[8px] border border-[var(--color-border)]/70 bg-[var(--color-bg)]">
-                  <Image
-                    src={project.screenshot}
-                    alt={project.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    className="object-cover object-top transition duration-300 group-hover:scale-[1.015]"
-                  />
+                  {project.screenshot ? (
+                    <Image
+                      src={project.screenshot}
+                      alt={project.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                      className="object-cover object-top transition duration-300 group-hover:scale-[1.015]"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-end bg-linear-to-br from-[var(--color-surface-alt)] via-[var(--color-surface)] to-[var(--color-bg-elevated)] p-4">
+                      <div>
+                        <p className="mono-label text-[11px] text-[var(--color-accent-warm)]">
+                          LIVE SITE
+                        </p>
+                        <p className="mt-2 text-lg font-semibold tracking-[-0.015em] text-[var(--color-text)]">
+                          {project.name}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   <div className="pointer-events-none absolute inset-0 bg-[var(--color-bg)]/22 mix-blend-multiply" />
                 </div>
               </div>
