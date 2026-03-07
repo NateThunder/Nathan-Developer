@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { BookCallButton } from "@/components/BookCallButton";
 
 const links = [
@@ -17,6 +17,47 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const closeMenu = () => setIsOpen(false);
+
+  const handleAnchorClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const targetId = href.replace(/^#/, "");
+    const target = document.getElementById(targetId);
+
+    if (!target) {
+      return;
+    }
+
+    event.preventDefault();
+    closeMenu();
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const header = document.querySelector("header");
+        const headerHeight =
+          header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+        const targetTop =
+          window.scrollY + target.getBoundingClientRect().top - headerHeight - 12;
+
+        window.history.pushState(null, "", href);
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: "smooth",
+        });
+      });
+    });
+  };
 
   return (
     <header className="sticky top-0 z-[90] border-b border-[var(--color-border)] bg-[var(--color-band)]">
@@ -44,6 +85,7 @@ export function Navigation() {
             <a
               key={link.href}
               href={link.href}
+              onClick={(event) => handleAnchorClick(event, link.href)}
               className={`text-sm font-medium text-[var(--color-muted)] transition hover:text-[var(--color-accent-soft)] ${FOCUS_RING}`}
             >
               {link.label}
@@ -98,7 +140,7 @@ export function Navigation() {
             <a
               key={link.href}
               href={link.href}
-              onClick={closeMenu}
+              onClick={(event) => handleAnchorClick(event, link.href)}
               className={`rounded-xl px-3 py-3 text-sm font-medium text-[var(--color-muted)] transition hover:bg-[var(--color-surface)] hover:text-[var(--color-accent)] ${FOCUS_RING}`}
             >
               {link.label}
