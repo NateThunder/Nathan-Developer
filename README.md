@@ -14,6 +14,10 @@ A custom portfolio and lead-generation site for Nathan Somevi / Somevi Labs.
 
 This project is not a static brochure. It is a small product: a design-led homepage, a live work showcase, an on-site AI assistant that qualifies leads, and a Google Calendar booking flow that can turn visitor intent into a scheduled meeting. The goal is simple: make the site feel polished to a recruiter, useful to a client, and technically credible to an engineer.
 
+<p align="center">
+  <img src="./public/nathansomevi.dev_.png" alt="Screenshot of the Nathan Somevi developer website homepage" width="100%" />
+</p>
+
 ## Why This Repo Is Worth Looking At
 
 - It shows front-end craft without hiding behind a template or UI kit.
@@ -24,16 +28,16 @@ This project is not a static brochure. It is a small product: a design-led homep
 
 ## What Visitors Actually See
 
-| Surface | What it does | Why it matters |
-| --- | --- | --- |
-| Sticky navigation | Smooth-scroll navigation with responsive mobile menu | Keeps the site usable and intentional on both desktop and mobile |
-| Hero section | Personal positioning, headshot, animated delivery messaging, and strong CTA | Makes the value proposition immediate |
-| Feature grid | Explains the product mindset: conversion, performance, accessibility, and editable-content thinking | Communicates engineering quality in business language |
-| Services band | Expandable service cards for strategy, UI/UX, build, motion, maintenance, and AI agent work | Turns capabilities into a scannable offer |
-| Work showcase | Clickable project cards linking to live websites | Gives visible proof of execution |
-| Booking flow | Portal-based modal with calendar UI, slot selection, form capture, and confirmation state | Converts interest into a real meeting |
-| AI widget | Floating assistant with suggested prompts and conversational replies | Adds a modern product layer and captures intent early |
-| Footer CTA | Final conversion point with contact routes and supporting links | Reinforces the business goal of the site |
+| Surface           | What it does                                                                                        | Why it matters                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Sticky navigation | Smooth-scroll navigation with responsive mobile menu                                                | Keeps the site usable and intentional on both desktop and mobile |
+| Hero section      | Personal positioning, headshot, animated delivery messaging, and strong CTA                         | Makes the value proposition immediate                            |
+| Feature grid      | Explains the product mindset: conversion, performance, accessibility, and editable-content thinking | Communicates engineering quality in business language            |
+| Services band     | Expandable service cards for strategy, UI/UX, build, motion, maintenance, and AI agent work         | Turns capabilities into a scannable offer                        |
+| Work showcase     | Clickable project cards linking to live websites                                                    | Gives visible proof of execution                                 |
+| Booking flow      | Portal-based modal with calendar UI, slot selection, form capture, and confirmation state           | Converts interest into a real meeting                            |
+| AI widget         | Floating assistant with suggested prompts and conversational replies                                | Adds a modern product layer and captures intent early            |
+| Footer CTA        | Final conversion point with contact routes and supporting links                                     | Reinforces the business goal of the site                         |
 
 ## Live Work Featured In The UI
 
@@ -98,28 +102,28 @@ This is a practical example of full-stack product work: front-end interaction de
 
 ## Technical Highlights
 
-| Area | Implementation |
-| --- | --- |
-| Front end | Next.js 16 App Router, React 19, TypeScript |
-| Styling | Tailwind CSS v4 plus custom CSS variables in `app/globals.css` |
-| Design language | Custom palette, 8px spacing rhythm, textured backgrounds, pixel-notch accents, reduced-motion support |
-| Typography | `Space Grotesk` and `IBM Plex Mono` via `next/font/google` |
-| Media | `next/image` for optimized image delivery |
-| Icon system | Custom inline SVG pixel icons generated from 6x6 binary maps |
-| Vector art | Custom section artwork rendered in SVG, not pulled from a design library |
-| AI orchestration | OpenAI Responses API path plus Groq chat-completions fallback |
-| Validation | Static agent regression checks and model-path canary tests in `scripts/` |
+| Area             | Implementation                                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------------- |
+| Front end        | Next.js 16 App Router, React 19, TypeScript                                                           |
+| Styling          | Tailwind CSS v4 plus custom CSS variables in `app/globals.css`                                        |
+| Design language  | Custom palette, 8px spacing rhythm, textured backgrounds, pixel-notch accents, reduced-motion support |
+| Typography       | `Space Grotesk` and `IBM Plex Mono` via `next/font/google`                                            |
+| Media            | `next/image` for optimized image delivery                                                             |
+| Icon system      | Custom inline SVG pixel icons generated from 6x6 binary maps                                          |
+| Vector art       | Custom section artwork rendered in SVG, not pulled from a design library                              |
+| AI orchestration | OpenAI Responses API path plus Groq chat-completions fallback                                         |
+| Validation       | Static agent regression checks and model-path canary tests in `scripts/`                              |
 
 ## External Services And APIs
 
-| Service | Role in the project |
-| --- | --- |
-| OpenAI | Primary provider for the website assistant |
-| Groq | Secondary provider / fallback for the assistant |
-| Google Calendar API | Availability lookup and booking event creation |
-| Google OAuth service-account flow | Server-side authentication for calendar access |
-| Google Meet | Attached automatically when supported by the event creation flow |
-| Google Fonts through `next/font` | Optimized delivery of `Space Grotesk` and `IBM Plex Mono` |
+| Service                           | Role in the project                                              |
+| --------------------------------- | ---------------------------------------------------------------- |
+| OpenAI                            | Primary provider for the website assistant                       |
+| Groq                              | Secondary provider / fallback for the assistant                  |
+| Google Calendar API               | Availability lookup and booking event creation                   |
+| Google OAuth service-account flow | Server-side authentication for calendar access                   |
+| Google Meet                       | Attached automatically when supported by the event creation flow |
+| Google Fonts through `next/font`  | Optimized delivery of `Space Grotesk` and `IBM Plex Mono`        |
 
 ## Project Structure
 
