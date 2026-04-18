@@ -10,6 +10,12 @@ type Project = {
 
 const projects: Project[] = [
   {
+    name: "grown-cookies",
+    url: "https://growncookies.co.uk/",
+    screenshot: "/work/grown-cookies.jpg",
+    alt: "Grown Cookies website screenshot",
+  },
+  {
     name: "team-church-glasgow",
     url: "https://teamchurchglasgow.com/",
     screenshot: "/work/team-church-glasgow.png",
