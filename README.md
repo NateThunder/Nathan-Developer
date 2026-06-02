@@ -43,9 +43,7 @@ This project is not a static brochure. It is a small product: a design-led homep
 
 - [Team Church Glasgow](https://teamchurchglasgow.com/)
 - [Skara Ceilidh Band](https://skaraceilidh.com/)
-- [Celtic Worship](https://celticworship.netlify.app/)
-- [Zerua](https://zerua.netlify.app/)
-- [Stem Player](https://stem-player.netlify.app/)
+- [Grown Cookies](https://growncookies.co.uk/)
 
 ## AI Agent Integration
 

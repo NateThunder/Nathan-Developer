@@ -98,6 +98,11 @@ run_case() {
     reasons+="legacy-copy(contact/calendar-link); "
   fi
 
+  if printf "%s" "$reply" | rg -qi '<function=|</function>|<instructions|</instructions>|missing_fields|next_question|function_call|tool_call|output contract|request context|\{\{|\$\{|```'; then
+    ok=0
+    reasons+="internal-artifact-leak; "
+  fi
+
   if [ "$ok" -eq 1 ]; then
     echo "PASS: $id"
     pass_count=$((pass_count + 1))

@@ -27,25 +27,6 @@ const projects: Project[] = [
     screenshot: "/work/skara-ceilidh-band.png",
     alt: "Skara Ceilidh Band website screenshot",
   },
-  {
-    name: "celtic-worship",
-    url: "https://celticworship.netlify.app/",
-    screenshot: "/work/celtic-worship.png",
-    alt: "Celtic Worship website screenshot",
-  },
-  {
-    name: "zerua",
-    url: "https://zerua.netlify.app/",
-    screenshot: "/work/zerua-dashboard.png",
-    alt: "Zerua website screenshot",
-  },
-  
-  {
-    name: "stem-player",
-    url: "https://stem-player.netlify.app/",
-    screenshot: "/work/stem-player.png",
-    alt: "Stem Player website screenshot",
-  },
 ];
 
 const FOCUS_RING =

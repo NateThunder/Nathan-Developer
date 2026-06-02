@@ -235,6 +235,7 @@ const FORMATTER_MAX_SUMMARY_CHARS = 280;
 const FORMATTER_MAX_QUESTION_CHARS = 200;
 const FORMATTER_MAX_REPLY_CHARS = 420;
 const BOOK_CALL_FOLLOW_UP_QUESTION = "Would you like to book a call?";
+const INTERNAL_ARTIFACT_REPLY = RESPONSE_POLICY.scopeAndNextSteps;
 const FORMATTER_ALLOWED_MISSING_FIELDS = new Set([
   "name",
   "email",
@@ -396,6 +397,44 @@ function clampMessage(value: unknown): string {
   return value.trim().slice(0, MAX_CHARS_PER_MESSAGE);
 }
 
+function hasInternalResponseArtifact(value: string): boolean {
+  const text = value.trim();
+  if (!text) {
+    return false;
+  }
+
+  const lower = text.toLowerCase();
+  const hasFormatterKeys =
+    /\b(?:missing_fields|missingfields|next_question|nextquestion|format_source)\b/i.test(
+      text
+    );
+  const hasJsonEnvelope = /^[\s`]*(?:json\s*)?\{[\s\S]*\}[\s`]*$/i.test(text);
+  const hasTemplatePlaceholder = /\{\{[\s\S]{1,120}\}\}|\$\{[\s\S]{1,120}\}/.test(text);
+  const hasPromptTag = /<\/?(?:instructions?|system|developer|assistant|user|tool|function)[^>]*>/i.test(
+    text
+  );
+  const hasFunctionSyntax =
+    /<function=/i.test(text) ||
+    /<\/function>/i.test(text) ||
+    /<(?:get_services|estimate_price_range|get_booking_details|submit_quote_request)>/i.test(
+      text
+    );
+  const hasInternalLabel =
+    /\b(?:system prompt|developer message|hidden instruction|output contract|request context|canonical response policy|function_call|tool_call|tool_calls|raw tool|metadata)\b/i.test(
+      text
+    );
+
+  return (
+    hasFunctionSyntax ||
+    hasPromptTag ||
+    hasTemplatePlaceholder ||
+    (hasJsonEnvelope && hasFormatterKeys) ||
+    (hasFormatterKeys && includesAny(lower, ["tone", "summary", "reply"])) ||
+    hasInternalLabel ||
+    /```[\s\S]*?```/.test(text)
+  );
+}
+
 function sanitizeMessages(raw: unknown, maxMessages: number = MAX_MESSAGES): ChatMessage[] {
   if (!Array.isArray(raw)) {
     return [];
@@ -416,6 +455,10 @@ function sanitizeMessages(raw: unknown, maxMessages: number = MAX_MESSAGES): Cha
       const content = clampMessage((entry as { content?: unknown }).content);
 
       if (!content) {
+        return null;
+      }
+
+      if (role === "assistant" && hasInternalResponseArtifact(content)) {
         return null;
       }
 
@@ -586,13 +629,9 @@ function filterBehaviorResponse(
   }
 
   if (
-    /<function=/i.test(normalized) ||
-    /<\/function>/i.test(normalized) ||
-    /<(?:get_services|estimate_price_range|get_booking_details|submit_quote_request)>/i.test(
-      normalized
-    )
+    hasInternalResponseArtifact(normalized)
   ) {
-    return RESPONSE_POLICY.scopeAndNextSteps;
+    return INTERNAL_ARTIFACT_REPLY;
   }
 
   const asksForEmailToSendQuote =
@@ -1000,6 +1039,18 @@ function getStaticReply(userText: string, messages: ChatMessage[]): string | nul
     includesAny(text, [
       "<submit_quote_request>",
       "<get_booking_details>",
+      "<instructions",
+      "</instructions>",
+      "<system",
+      "</system>",
+      "{{",
+      "${",
+      "missing_fields",
+      "next_question",
+      "output contract",
+      "request context",
+      "function_call",
+      "tool_call",
       "<function=",
       "</function>",
     ])

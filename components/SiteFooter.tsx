@@ -1,5 +1,6 @@
 import { BookCallButton } from "@/components/BookCallButton";
 import { SectionVectorArt } from "@/components/SectionVectorArt";
+import { WebsiteQr } from "@/components/WebsiteQr";
 
 const FOCUS_RING =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]";
@@ -54,7 +55,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-8 border-t-2 border-[var(--color-border)] pt-7 sm:mt-10 sm:pt-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-8 border-t-2 border-[var(--color-border)] pt-7 sm:mt-10 sm:pt-8 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto]">
           <div>
             <p className="text-base font-semibold text-[var(--color-text)]">
               Somevi Labs
@@ -128,6 +129,16 @@ export function SiteFooter() {
                 </a>
               </li>
             </ul>
+          </div>
+
+          <div className="sm:col-span-2 lg:col-span-1 lg:justify-self-end">
+            <p className="text-sm font-semibold text-[var(--color-text)]">Scan</p>
+            <p className="mt-2 max-w-[22ch] text-sm leading-7 text-[var(--color-muted)]">
+              Scan to open the site directly on your phone.
+            </p>
+            <div className="mt-4 w-full max-w-[220px]">
+              <WebsiteQr />
+            </div>
           </div>
         </div>
 
