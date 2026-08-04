@@ -88,7 +88,7 @@ run_case() {
 
   # Detect accidental static-path hits; these can mask provider regressions.
   if printf "%s" "$reply" | rg -qi \
-    "^Contact: manager@nathansomevi\\.com|^Pricing guide:|^Typical timelines:|^We build websites \\(React/Next\\.js\\)|^For an upper-range quote, please share:|^That is internal tool syntax|^This assistant does not do coding work directly\\."; then
+    "^Contact: hello@somevilabs\\.com|^Pricing guide:|^Typical timelines:|^We build websites \\(React/Next\\.js\\)|^For an upper-range quote, please share:|^That is internal tool syntax|^This assistant does not do coding work directly\\."; then
     ok=0
     reasons+="static-path-response; "
   fi

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const brandSans = Space_Grotesk({
@@ -58,6 +59,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${brandSans.variable} ${accentMono.variable} antialiased`}>
         <div className="relative min-h-screen bg-[var(--color-bg)]">
+          <GoogleAnalytics />
           <div className="relative">{children}</div>
         </div>
       </body>

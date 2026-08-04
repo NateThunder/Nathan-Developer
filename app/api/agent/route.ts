@@ -89,7 +89,7 @@ type InlineToolInvocation = {
 };
 
 const CONTACT = {
-  email: "manager@nathansomevi.com",
+  email: "hello@somevilabs.com",
   phone: "+44 7846 677463",
   whatsapp: "+44 7846 677463",
   preferredContact: "WhatsApp",
@@ -186,7 +186,7 @@ Pricing and timeline guidance:
 - Upper-range quotes require details first: name, email, business type, budget, timeline, required features.
 
 Contact and booking details:
-- Email: manager@nathansomevi.com
+- Email: hello@somevilabs.com
 - Phone/WhatsApp: +44 7846 677463
 - Preferred contact: WhatsApp
 - Booking: ${CONTACT.booking}

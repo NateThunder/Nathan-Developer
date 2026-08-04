@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { BookCallButton } from "@/components/BookCallButton";
+import { trackEvent } from "@/lib/analytics";
 
 type ChatMessage = {
   id: string;
@@ -76,6 +77,9 @@ export function ChatAgentWidget() {
     setInput("");
     setError("");
     setIsSending(true);
+    trackEvent("chat_message_sent", {
+      message_type: options?.fromSuggestion ? "suggestion" : "typed",
+    });
 
     try {
       const res = await fetch("/api/agent", {
@@ -273,7 +277,12 @@ export function ChatAgentWidget() {
 
       <button
         type="button"
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={() =>
+          setIsOpen((open) => {
+            if (!open) trackEvent("chat_open");
+            return !open;
+          })
+        }
         className={`pixel-notch relative mt-1 inline-flex items-center gap-2 rounded-full border-2 border-[#8a3f2f] bg-[var(--color-accent-warm)] px-5 py-3 text-sm font-semibold text-[#1d1b1a] shadow-[0_12px_24px_rgba(21,7,3,0.46)] ring-2 ring-[#f1b896]/65 transition hover:brightness-105 ${FOCUS_RING}`}
         aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
       >

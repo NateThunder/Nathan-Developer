@@ -10,8 +10,9 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { trackEvent } from "@/lib/analytics";
 
-const CONTACT_EMAIL = "manager@nathansomevi.com";
+const CONTACT_EMAIL = "hello@somevilabs.com";
 const CONTACT_PHONE_E164 = "+447846677463";
 const CONTACT_PHONE_LABEL = "+44 7846 677463";
 const WHATSAPP_E164 = "447846677463";
@@ -271,6 +272,7 @@ export function BookCallButton({
   const [visibleMonthKey, setVisibleMonthKey] = useState("");
   const selectedSlotRef = useRef(selectedSlot);
   const selectedDateKeyRef = useRef(selectedDateKey);
+  const formStartedRef = useRef(false);
 
   useEffect(() => {
     selectedSlotRef.current = selectedSlot;
@@ -497,6 +499,7 @@ export function BookCallButton({
 
   const openDialog = () => {
     onOpen?.();
+    trackEvent("book_call_open", { button_label: label });
     setBookingError("");
     setBookingSuccess(null);
     setIsOpen(true);
@@ -562,6 +565,10 @@ export function BookCallButton({
       }
 
       setBookingSuccess(payload);
+      trackEvent("booking_completed", {
+        meeting_minutes: meetingMinutes,
+        timezone: slotTimeZone,
+      });
       setProjectSummary("");
       void loadSlots();
     } catch (error) {
@@ -712,7 +719,16 @@ export function BookCallButton({
                       </div>
                     </div>
                   ) : (
-                    <form onSubmit={onBookMeeting} className="mt-4 space-y-4">
+                    <form
+                      onSubmit={onBookMeeting}
+                      onFocus={() => {
+                        if (!formStartedRef.current) {
+                          formStartedRef.current = true;
+                          trackEvent("booking_form_started");
+                        }
+                      }}
+                      className="mt-4 space-y-4"
+                    >
                       <div className="grid gap-3 sm:grid-cols-2">
                         <label className="text-xs text-[var(--color-muted)]">
                           Name *
