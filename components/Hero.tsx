@@ -6,8 +6,8 @@ const FOCUS_RING =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]";
 
 const STATUS_MESSAGES = [
-  "Custom starter sites in 48 hours.",
-  "Full custom builds in 2-4 weeks.",
+  "Professional websites from £1,500.",
+  "Tailored builds in 2-4 weeks.",
 ];
 
 export function Hero() {
@@ -16,16 +16,16 @@ export function Hero() {
       <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-4 pb-12 pt-8 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-20">
         <div className="relative z-[80]">
           <p className="mono-label text-[11px] text-[var(--color-accent-soft)]">
-            Nathan Somevi | Full Stack Engineer | WEB DESIGN
+            SOMEVI LABS | PROFESSIONAL WEBSITES | UK-WIDE
           </p>
 
           <h1 className="mt-4 max-w-[15ch] text-balance text-3xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-5xl lg:text-6xl">
-            I build software that helps your business grow.
+            Professional websites that help clients choose you.
           </h1>
 
           <p className="mt-6 max-w-[58ch] text-base leading-7 text-[var(--color-muted)] sm:text-lg sm:leading-8">
-            Websites, applications, and custom systems designed to be easy to manage, flexible to change, 
-            and tailored to your vision.
+            A clear, credible website for your professional service—designed to build trust,
+            generate enquiries, and be easy to manage. Websites from £1,500.
           </p>
 
           <p className="mt-5 inline-flex w-full max-w-full items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-alt)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-accent-soft)] sm:w-auto">

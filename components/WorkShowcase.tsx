@@ -18,7 +18,7 @@ const projects: Project[] = [
   {
     name: "team-church-glasgow",
     url: "https://teamchurchglasgow.com/",
-    screenshot: "/work/team-church-glasgow.png",
+    screenshot: "/work/team-church-glasgow-2026.png",
     alt: "Team Church Glasgow website screenshot",
   },
   {
@@ -26,6 +26,18 @@ const projects: Project[] = [
     url: "https://skaraceilidh.com/",
     screenshot: "/work/skara-ceilidh-band.png",
     alt: "Skara Ceilidh Band website screenshot",
+  },
+  {
+    name: "rivkala",
+    url: "https://rivkala.com/",
+    screenshot: "/work/rivkala.png",
+    alt: "Rivkala website preview",
+  },
+  {
+    name: "luca-pisanu-music",
+    url: "https://lucapisanumusic.com/",
+    screenshot: "/work/luca-pisanu-music.png",
+    alt: "Luca Pisanu Music website screenshot",
   },
 ];
 

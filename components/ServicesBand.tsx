@@ -16,80 +16,80 @@ type Service = {
 const services: Service[] = [
   {
     id: "strategy",
-    title: "Strategy",
-    description: "Positioning, messaging, and page structure planning.",
+    title: "Professional websites",
+    description: "A website shaped around your business, clients, and goals. From £1,500.",
     details:
-      "We map user goals to business outcomes so every section has a clear role.",
+      "We work out what your customers need to see and do, then build a website that makes your business easy to choose.",
     bullets: [
-      "Discovery and content hierarchy",
-      "Offer clarity and CTA plan",
-      "Audience-first page flow",
+      "Clear services and messaging",
+      "Built for phones and desktops",
+      "Enquiry-focused page structure",
     ],
     icon: "strategy",
   },
   {
     id: "uiux",
-    title: "UI/UX",
-    description: "Visual direction, interaction patterns, and responsive design.",
+    title: "Design that builds trust",
+    description: "A professional online presence that reflects the quality of your work.",
     details:
-      "Interface systems built for clarity on desktop and mobile, with consistency across pages.",
+      "Your website will look considered, feel simple to use, and give customers confidence before they contact you.",
     bullets: [
-      "Wireframes and visual system",
-      "Interaction and states",
-      "Mobile-first refinements",
+      "Designed around your brand",
+      "Clear calls to action",
+      "Easy for visitors to use",
     ],
     icon: "design",
   },
   {
     id: "build",
-    title: "Build",
-    description: "Production-ready front-end implementation and QA.",
+    title: "Fast, solid foundations",
+    description: "A reliable website built to load quickly and work properly.",
     details:
-      "Clean implementation with performance and accessibility checks before launch.",
+      "Everything is built carefully behind the scenes, with performance, security, and a smooth launch covered.",
     bullets: [
       "Fast-loading pages",
-      "Semantic, accessible markup",
-      "Launch QA checklist",
+      "Search-ready foundations",
+      "A smooth, supported launch",
     ],
     icon: "build",
   },
   {
     id: "motion",
-    title: "Motion",
-    description: "Subtle interface motion to improve pacing and clarity.",
+    title: "Content you can manage",
+    description: "A custom content management system, set up around how your business works.",
     details:
-      "Motion is used intentionally to guide attention, not distract from content.",
+      "Update services, news, products, galleries, or team details without needing to touch the website code.",
     bullets: [
-      "Meaningful transitions",
-      "Micro-feedback on actions",
-      "Reduced-motion support",
+      "Made for your day-to-day updates",
+      "Simple editing experience",
+      "No unnecessary complexity",
     ],
     icon: "motion",
   },
   {
     id: "maintenance",
-    title: "Maintenance",
-    description: "Ongoing updates, support, and iteration post-launch.",
+    title: "Booking and payments",
+    description: "Let customers pay, reserve, or enquire online without friction.",
     details:
-      "Post-launch support keeps content current, stable, and aligned with growth goals.",
+      "Where it makes sense for your business, we can connect secure payment and booking tools directly to your website.",
     bullets: [
-      "Monthly updates and fixes",
-      "Content and section changes",
-      "Performance monitoring",
+      "Stripe or PayPal payments",
+      "Booking and enquiry flows",
+      "Secure, practical integrations",
     ],
     icon: "maintenance",
   },
   {
     id: "agent",
-    title: "AI Agent",
+    title: "Dashboards and support",
     description:
-      "On-site assistant to qualify leads, answer key questions, and guide visitors to book a call.",
+      "Optional dashboards, practical automations, and ongoing support as your business grows.",
     details:
-      "The agent can handle common sales questions, estimate ranges, and route qualified visitors.",
+      "When your website needs to do more, we can add client dashboards, simple workflows, or reliable ongoing support.",
     bullets: [
-      "Lead qualification prompts",
-      "Pricing and timeline guidance",
-      "Book-a-call handoff",
+      "Client dashboards and portals",
+      "Simple automations",
+      "Ongoing website support",
     ],
     icon: "agent",
   },
@@ -124,11 +124,11 @@ export function ServicesBand() {
                 SERVICES
               </p>
               <h2 className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] text-[var(--color-text)] sm:text-4xl">
-                A focused end-to-end web design stack.
+                Everything your website needs to work harder for your business.
               </h2>
             </div>
             <p className="max-w-[420px] text-sm leading-7 text-[var(--color-muted)]">
-              Tap a card to open deeper service details.
+              Start with a professional website, then add bookings, ecommerce, dashboards, or support when it makes sense.
             </p>
           </div>
 

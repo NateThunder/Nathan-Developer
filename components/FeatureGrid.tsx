@@ -47,7 +47,7 @@ export function FeatureGrid() {
               PRODUCT MINDSET
             </p>
             <h2 className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] text-[var(--color-text)] sm:text-4xl">
-              Built like software, presented like a brand.
+              Built to earn trust, designed around your brand.
             </h2>
           </div>
 

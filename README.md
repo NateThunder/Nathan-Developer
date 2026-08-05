@@ -186,7 +186,15 @@ BOOKING_MEETING_MINUTES=30
 BOOKING_SLOT_DAYS=14
 BOOKING_WORKDAY_START=09:00
 BOOKING_WORKDAY_END=18:00
+
+# Analytics and password-protected admin dashboard
+NEXT_PUBLIC_GA_ID=
+GA_PROPERTY_ID=
+ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=
 ```
+
+Grant the configured service-account email Viewer access in GA4 Property Access Management and enable the Google Analytics Data API for its Google Cloud project. Use a unique production admin password and a random session secret of at least 32 characters.
 
 ### Provider behavior
 
