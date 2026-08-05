@@ -1,0 +1,107 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation "Primary" [ref=e5]:
+      - link "Rivkala home" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - link "Music" [ref=e9] [cursor=pointer]:
+            - /url: /music
+        - listitem [ref=e12]:
+          - link "Videos" [ref=e13] [cursor=pointer]:
+            - /url: /videos
+        - listitem [ref=e16]:
+          - link "Live" [ref=e17] [cursor=pointer]:
+            - /url: /live
+        - listitem [ref=e20]:
+          - link "Bio" [ref=e21] [cursor=pointer]:
+            - /url: /bio
+        - listitem [ref=e24]:
+          - link "EPK" [ref=e25] [cursor=pointer]:
+            - /url: /epk
+        - listitem [ref=e28]:
+          - link "Shop" [ref=e29] [cursor=pointer]:
+            - /url: /shop
+        - listitem [ref=e32]:
+          - link "Contact" [ref=e33] [cursor=pointer]:
+            - /url: /contact
+    - generic [ref=e37]:
+      - heading "Rivkala" [level=1] [ref=e38]
+      - generic [ref=e39]:
+        - img "Showgirl, singer and storyteller" [ref=e40]
+        - navigation "Featured actions" [ref=e41]:
+          - link "Listen" [ref=e42] [cursor=pointer]:
+            - /url: /music
+          - link "Watch" [ref=e44] [cursor=pointer]:
+            - /url: /videos
+          - link "Download EPK ↓" [ref=e46] [cursor=pointer]:
+            - /url: /api/media/epk-pdf/RIVKALA_EPK_OFFICIAL.pdf
+            - generic [ref=e47]: Download EPK
+            - text: ↓
+    - generic [ref=e49]:
+      - region [ref=e50]:
+        - generic [ref=e51]:
+          - heading [level=2] [ref=e52]:
+            - generic [ref=e53]: Featured
+            - generic [ref=e54]: Releases
+          - generic [ref=e55]:
+            - article [ref=e56]:
+              - link "View Crushed Velvet on the Music page" [ref=e57] [cursor=pointer]:
+                - /url: /music#release-crushed-velvet
+                - img "Crushed Velvet cover artwork" [ref=e58]
+              - heading "Crushed Velvet" [level=3] [ref=e59]
+              - link "Listen to Crushed Velvet on the Music page" [ref=e60] [cursor=pointer]:
+                - /url: /music#release-crushed-velvet
+                - generic [ref=e61]: Listen
+            - article [ref=e62]:
+              - link "View Chess on the Music page" [ref=e63] [cursor=pointer]:
+                - /url: /music#release-chess
+                - img "Chess cover artwork" [ref=e64]
+              - heading "Chess" [level=3] [ref=e65]
+              - link "Listen to Chess on the Music page" [ref=e66] [cursor=pointer]:
+                - /url: /music#release-chess
+                - generic [ref=e67]: Listen
+            - article [ref=e68]:
+              - link "View Zip Lock Teeth on the Music page" [ref=e69] [cursor=pointer]:
+                - /url: /music#release-zip-lock-teeth
+                - img "Zip Lock Teeth cover artwork" [ref=e70]
+              - heading "Zip Lock Teeth" [level=3] [ref=e71]
+              - link "Listen to Zip Lock Teeth on the Music page" [ref=e72] [cursor=pointer]:
+                - /url: /music#release-zip-lock-teeth
+                - generic [ref=e73]: Listen
+          - link "View all releases" [ref=e74] [cursor=pointer]:
+            - /url: /music
+      - region [ref=e76]:
+        - generic [ref=e77]:
+          - heading [level=2] [ref=e78]:
+            - generic [ref=e79]: Featured
+            - generic [ref=e80]: Video
+          - iframe [ref=e85]:
+            - generic [ref=f1e1]:
+              - generic "YouTube Video Player" [ref=f1e3]
+              - generic [ref=f1e5]:
+                - generic:
+                  - generic:
+                    - button "Play video" [ref=f1e10] [cursor=pointer]
+                    - button "Hide player controls" [ref=f1e12] [cursor=pointer]
+                    - generic [ref=f1e14]:
+                      - generic [ref=f1e19]:
+                        - generic [ref=f1e20]:
+                          - link "Rivkala - Chess (Official Video)" [ref=f1e21] [cursor=pointer]:
+                            - /url: https://www.youtube.com/watch?v=LK7PeIOZiVY
+                          - link "RivkalaVEVO" [ref=f1e22] [cursor=pointer]:
+                            - /url: /channel/UCbdZo89i08j8EyBXQ8S8mIQ
+                        - generic [ref=f1e24]:
+                          - button [ref=f1e25] [cursor=pointer]
+                          - generic [ref=f1e26]: RivkalaVEVO
+                      - generic [ref=f1e28]:
+                        - button "Share" [ref=f1e31] [cursor=pointer]
+                        - link "Watch on YouTube" [ref=f1e42] [cursor=pointer]:
+                          - /url: https://www.youtube.com/watch?v=LK7PeIOZiVY
+                          - generic [ref=f1e43]: Watch on
+          - generic "Featured video actions" [ref=e87]:
+            - link "Watch" [ref=e88] [cursor=pointer]:
+              - /url: /videos
+            - link "View all videos" [ref=e90] [cursor=pointer]:
+              - /url: /videos
+  - alert [ref=e92]

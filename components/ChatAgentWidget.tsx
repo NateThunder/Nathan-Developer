@@ -13,7 +13,7 @@ type ChatMessage = {
 const SUGGESTIONS = [
   "How do I get started?",
   "How much does a website cost?",
-  "I need a church website in 4 weeks.",
+  "I need a professional website in 4 weeks.",
 ];
 
 const FOCUS_RING =

@@ -116,19 +116,19 @@ const RESPONSE_POLICY = {
   directCoding:
     "This assistant does not do coding work directly. I can help you scope the project and next steps. Share business type, goals, budget, timeline, and required features, then use the Book a Call button.",
   techStack:
-    "We build websites in React and Next.js. For apps, we use Swift, React Native, and Flutter depending on the product. We use modern coding tools for strong performance and scalable quality.",
+    "We create professional websites with modern, reliable technology. The focus is a fast, easy-to-manage site that helps your business generate enquiries.",
   aiRole:
     "The AI agent handles light questions plus booking and scheduling calls/meetings. It does not do coding work.",
   bookingIntent:
     "Perfect. Use the Book a Call button on this page to choose a time. In the project summary, mention your classes, what you need, and your preferred timeline.",
   pricingGuide:
-    "Pricing guide: basic 1-page site is GBP 600-1000. Advanced websites are GBP 1000-3000+ depending on features and timeline. App MVPs are GBP 1000-2000. Full native apps with database + APIs are usually GBP 3000-8000+. For exact upper-range pricing, use the Book a Call button.",
+    "Pricing guide: professional websites start from GBP 1500. Most tailored professional-service websites are GBP 2500-4000. Booking systems are typically an additional GBP 500-1250, ecommerce from GBP 1500, and custom dashboards from GBP 2500. For an exact quote, use the Book a Call button.",
   timelineGuide:
-    "Typical timelines: basic website around 1 week. Advanced websites usually 2-4 weeks, sometimes longer for complex features. App MVPs are often 2-8 weeks. Native apps usually take longer than cross-platform. Use the Book a Call button to lock the scope and timeline.",
+    "Typical timelines: a professional website usually takes 2-4 weeks, with more time for ecommerce, dashboards, or more complex features. Use the Book a Call button to confirm the scope and timeline.",
   services:
-    "We build business websites, mobile apps, custom systems, booking automations, and MVP prototypes. If you want, I can recommend the best option for your project, or you can use the Book a Call button.",
+    "We create professional websites first, then add booking systems, ecommerce, client dashboards, and ongoing support where useful. If you want, I can recommend the right route for your business, or you can use the Book a Call button.",
   servicesCompact:
-    "We build websites, apps, custom systems, booking automations, and MVPs. Share your goals and timeline, then use the Book a Call button.",
+    "We create professional websites, with optional booking, ecommerce, dashboards, and ongoing support. Share your goals and timeline, then use the Book a Call button.",
   estimateFallback:
     "I can estimate pricing once the scope is confirmed. Share key requirements, then use the Book a Call button.",
   providerFallback:
@@ -144,20 +144,20 @@ const SERVICES: Service[] = [
     summary: "High-converting websites built for your audience and goals.",
   },
   {
-    name: "Mobile Apps",
-    summary: "Customer-facing apps for bookings, memberships, and digital services.",
+    name: "Booking Systems",
+    summary: "Easy booking, scheduling, and enquiry flows for your website.",
   },
   {
-    name: "Custom Systems",
-    summary: "Internal tools, integrations, and data workflows for daily operations.",
+    name: "Ecommerce",
+    summary: "Straightforward online selling that is easy for customers and your team to use.",
   },
   {
-    name: "Booking and Automation",
-    summary: "Automated booking, scheduling, and lead follow-up experiences.",
+    name: "Client Dashboards",
+    summary: "Practical dashboards and portals for business processes that need more than a website.",
   },
   {
-    name: "MVP Prototypes",
-    summary: "Fast validation builds before full-scale development.",
+    name: "Ongoing Support",
+    summary: "Reliable updates, improvements, and help after your website goes live.",
   },
 ];
 
@@ -171,18 +171,19 @@ Primary goal:
 
 Business profile:
 - Friendly and professional tone, with clear, practical communication.
-- Core clients: local businesses, bands/music projects, and charity organisations.
-- Core web stack: React + Next.js.
-- Mobile stack: Swift, React Native, Flutter.
-- Delivery style: fast shipping, high quality, scalable builds.
-- Can include editable content workflows (basic CRUD) where relevant.
+- Core clients: professional service businesses across the UK.
+- Core offer: a credible, enquiry-focused professional website.
+- Optional upgrades: booking systems, ecommerce, client dashboards, and ongoing support.
+- Can include editable content workflows where relevant.
 
 Pricing and timeline guidance:
-- Basic 1-page portfolio website with no extra features: GBP 600-1000, usually around 1 week.
-- Advanced website: GBP 1000-3000+, typically 2-4 weeks depending on complexity and features.
-- App MVP: GBP 1000-2000, typically 2-8 weeks depending on features and stack.
-- Full native app with database + APIs: GBP 3000-8000+, usually longer than cross-platform builds.
-- APIs, AI agents, and higher complexity increase both cost and timeline.
+- Professional website: from GBP 1500, usually 2-4 weeks.
+- Most tailored professional-service websites: GBP 2500-4000.
+- Booking system: add GBP 500-1250.
+- Ecommerce: from an additional GBP 1500.
+- Custom client dashboard: from an additional GBP 2500.
+- Ongoing support: GBP 100-250 per month.
+- More pages and complexity increase both cost and timeline.
 - Upper-range quotes require details first: name, email, business type, budget, timeline, required features.
 
 Contact and booking details:
@@ -1166,86 +1167,69 @@ function estimatePriceRange(args: EstimateArgs) {
   const includesAiAgent =
     Boolean(args.includesAiAgent) || includesAny(projectType, ["ai agent", "assistant"]);
 
-  const isAppProject =
-    args.platform === "cross-platform" ||
-    args.platform === "native" ||
-    includesAny(projectType, [
-      "app",
-      "mobile",
-      "react native",
-      "flutter",
-      "swift",
-      "ios",
-      "android",
-    ]);
-  const isNative =
-    args.platform === "native" ||
-    includesAny(projectType, ["native", "swift", "ios", "android"]);
-  const isMvp = Boolean(args.isMvp) || includesAny(projectType, ["mvp", "prototype"]);
+  const includesEcommerce = includesAny(projectType, ["ecommerce", "e-commerce", "shop", "store", "products"]);
+  const includesDashboard = includesAny(projectType, ["dashboard", "portal", "client area"]);
+  const includesBooking = includesAny(projectType, ["booking", "appointment", "scheduling"]);
 
   let min = 0;
   let max = 0;
   let estimatedTimeline = "";
   let projectClass = "";
 
-  if (isAppProject) {
-    if (isNative) {
-      min = 3000;
-      max = 8000;
-      estimatedTimeline = "4-12 weeks";
-      projectClass = "full_native_app";
-    } else if (isMvp) {
-      min = 1000;
-      max = 2000;
-      estimatedTimeline = "2-8 weeks";
-      projectClass = "app_mvp";
-    } else {
-      min = 1600;
-      max = 3200;
-      estimatedTimeline = "2-8 weeks";
-      projectClass = "cross_platform_app";
-    }
+  const starterWebsite =
+    pageCount <= 3 &&
+    !args.includesCms &&
+    !args.includesBranding &&
+    !includesApiIntegration &&
+    !includesAiAgent &&
+    !includesEcommerce &&
+    !includesDashboard &&
+    !includesBooking;
+
+  if (starterWebsite) {
+    min = 1500;
+    max = 2000;
+    estimatedTimeline = "2-3 weeks";
+    projectClass = "professional_website";
   } else {
-    const basicOnePage =
-      pageCount <= 1 &&
-      !args.includesCms &&
-      !args.includesBranding &&
-      !includesApiIntegration &&
-      !includesAiAgent;
+    min = 2500;
+    max = 4000;
+    estimatedTimeline = "2-4 weeks (longer for complex features)";
+    projectClass = "tailored_professional_website";
+  }
 
-    if (basicOnePage) {
-      min = 600;
-      max = 1000;
-      estimatedTimeline = "around 1 week";
-      projectClass = "basic_one_page_website";
-    } else {
-      min = 1000;
-      max = 3000;
-      estimatedTimeline = "2-4 weeks (longer for complex features)";
-      projectClass = "advanced_website";
-    }
-
-    if (pageCount > 6) {
-      min += 250;
-      max += 900;
-    }
+  if (pageCount > 6) {
+    min += 500;
+    max += 1500;
   }
 
   if (args.includesCms) {
-    min += 250;
-    max += 900;
+    min += 500;
+    max += 1000;
   }
   if (args.includesBranding) {
-    min += 250;
-    max += 700;
+    min += 500;
+    max += 1000;
   }
   if (includesApiIntegration) {
-    min += 300;
-    max += 1400;
+    min += 500;
+    max += 1250;
   }
   if (includesAiAgent) {
-    min += 400;
-    max += 1800;
+    min += 750;
+    max += 2000;
+  }
+  if (includesBooking && !includesApiIntegration) {
+    min += 500;
+    max += 1250;
+  }
+  if (includesEcommerce) {
+    min += 1500;
+    max += 3000;
+  }
+  if (includesDashboard) {
+    min += 2500;
+    max += 5000;
   }
 
   switch (args.urgency) {

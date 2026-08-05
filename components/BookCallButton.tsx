@@ -622,56 +622,23 @@ export function BookCallButton({
 
                 <div className="contact-scrollbar relative my-5 max-h-[calc(100dvh-4.5rem)] overflow-y-auto p-5 sm:my-6 sm:max-h-[calc(100dvh-5rem)] sm:p-6">
                 <p className="mono-label text-[11px] text-[var(--color-accent-warm)]">
-                  CONTACT AND BOOKING
+                  FREE WEBSITE CALL
                 </p>
                 <h3
                   id={titleId}
                   className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text)]"
                 >
-                  Contact
+                  Book a free website call
                 </h3>
                 <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
-                  Choose a fast contact option or book a {meetingMinutes}-minute
-                  meeting instantly.
+                  In {meetingMinutes} minutes, we&apos;ll look at what your business needs,
+                  recommend the right website route, and give you an honest timeline and
+                  price range. No jargon or pressure.
                 </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  <a
-                    href={`tel:${CONTACT_PHONE_E164}`}
-                    className="pixel-notch inline-flex flex-col items-start justify-between gap-2 rounded-[14px] border-2 border-[var(--color-accent-warm)] bg-[var(--color-surface-alt)] px-4 py-3 text-left text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
-                  >
-                    <span className="mono-label text-[10px] text-[var(--color-accent-soft)]">
-                      CALL
-                    </span>
-                    <span>{CONTACT_PHONE_LABEL}</span>
-                  </a>
-
-                  <a
-                    href={`https://wa.me/${WHATSAPP_E164}?text=${whatsAppMessage}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="pixel-notch inline-flex flex-col items-start justify-between gap-2 rounded-[14px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-left text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
-                  >
-                    <span className="mono-label text-[10px] text-[var(--color-accent-soft)]">
-                      MESSAGE
-                    </span>
-                    <span>WhatsApp ({CONTACT_PHONE_LABEL})</span>
-                  </a>
-
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="pixel-notch inline-flex flex-col items-start justify-between gap-2 rounded-[14px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-left text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
-                  >
-                    <span className="mono-label text-[10px] text-[var(--color-accent-soft)]">
-                      EMAIL
-                    </span>
-                    <span className="break-all">{CONTACT_EMAIL}</span>
-                  </a>
-                </div>
 
                   <section className="mt-6 rounded-[16px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:p-5">
                   <p className="mono-label text-[10px] text-[var(--color-accent-soft)]">
-                    BOOK MEETING ({meetingMinutes} MINUTES)
+                    CHOOSE A TIME ({meetingMinutes} MINUTES)
                   </p>
                   <p className="mt-2 text-xs text-[var(--color-muted)]">
                     Time zone: {slotTimeZone}
@@ -752,11 +719,11 @@ export function BookCallButton({
                       </div>
 
                       <label className="block text-xs text-[var(--color-muted)]">
-                        Project summary *
+                        Tell me about your business *
                         <textarea
                           value={projectSummary}
                           onChange={(event) => setProjectSummary(event.target.value)}
-                          placeholder="What are you trying to build?"
+                          placeholder="What do you need help with, and what would you like your website to achieve?"
                           rows={4}
                           className="mt-1 w-full rounded-[10px] border-2 border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-accent-soft)]"
                         />
@@ -954,11 +921,44 @@ export function BookCallButton({
                         disabled={!canBook}
                         className="pixel-notch inline-flex w-full items-center justify-center rounded-full border-2 border-[#8a3f2f] bg-[var(--color-accent-warm)] px-4 py-2.5 text-sm font-semibold text-[#1d1b1a] shadow-[0_8px_16px_rgba(20,8,4,0.32)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        {isBooking ? "Booking..." : "Book Meeting"}
+                        {isBooking
+                          ? "Booking..."
+                          : `Book my free ${meetingMinutes}-minute call`}
                       </button>
                     </form>
                   )}
                   </section>
+
+                <div className="mt-5 border-t border-[var(--color-border)] pt-5">
+                  <p className="text-xs text-[var(--color-muted)]">
+                    Prefer to get in touch another way?
+                  </p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                    <a
+                      href={`tel:${CONTACT_PHONE_E164}`}
+                      className="pixel-notch inline-flex flex-col items-start justify-between gap-2 rounded-[14px] border-2 border-[var(--color-accent-warm)] bg-[var(--color-surface-alt)] px-4 py-3 text-left text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
+                    >
+                      <span className="mono-label text-[10px] text-[var(--color-accent-soft)]">CALL</span>
+                      <span>{CONTACT_PHONE_LABEL}</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/${WHATSAPP_E164}?text=${whatsAppMessage}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="pixel-notch inline-flex flex-col items-start justify-between gap-2 rounded-[14px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-left text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
+                    >
+                      <span className="mono-label text-[10px] text-[var(--color-accent-soft)]">MESSAGE</span>
+                      <span>WhatsApp ({CONTACT_PHONE_LABEL})</span>
+                    </a>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="pixel-notch inline-flex flex-col items-start justify-between gap-2 rounded-[14px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-left text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
+                    >
+                      <span className="mono-label text-[10px] text-[var(--color-accent-soft)]">EMAIL</span>
+                      <span className="break-all">{CONTACT_EMAIL}</span>
+                    </a>
+                  </div>
+                </div>
                 </div>
               </div>
             </div>,

@@ -17,15 +17,15 @@ const accentMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"),
-  title: "Somevi Labs | Web Design Studio",
+  metadataBase: new URL("https://nathansomevi.dev"),
+  title: "Somevi Labs | Professional Websites for UK Businesses",
   description:
-    "Modern web design studio crafting high-performance websites with vector clarity and subtle pixel accents.",
+    "Professional websites for UK service businesses, with optional booking, ecommerce, dashboards, and ongoing support.",
   openGraph: {
-    title: "Somevi Labs | Web Design Studio",
+    title: "Somevi Labs | Professional Websites for UK Businesses",
     description:
-      "Modern web design studio crafting high-performance websites with vector clarity and subtle pixel accents.",
-    url: "https://example.com",
+      "Professional websites for UK service businesses, with optional booking, ecommerce, dashboards, and ongoing support.",
+    url: "https://nathansomevi.dev",
     siteName: "Somevi Labs",
     locale: "en_US",
     type: "website",
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Somevi Labs | Web Design Studio",
+    title: "Somevi Labs | Professional Websites for UK Businesses",
     description:
-      "Modern web design studio crafting high-performance websites with vector clarity and subtle pixel accents.",
+      "Professional websites for UK service businesses, with optional booking, ecommerce, dashboards, and ongoing support.",
     images: ["/og-image.svg"],
   },
   icons: {

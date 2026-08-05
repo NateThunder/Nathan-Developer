@@ -1,0 +1,105 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: Every Sunday at 11:00 AM | 12 Whitehill Street, Glasgow G31 2LH
+      - link [ref=e14] [cursor=pointer]:
+        - /url: /watch?mode=live
+        - text: Watch Live Sunday
+    - link [ref=e18] [cursor=pointer]:
+      - /url: /connect
+      - text: Plan a Visit
+  - banner [ref=e22]:
+    - link "Home" [ref=e23] [cursor=pointer]:
+      - /url: /
+      - img "Team Church" [ref=e24]
+    - navigation [ref=e26]:
+      - link "Home" [ref=e27] [cursor=pointer]:
+        - /url: /
+      - link "Watch" [ref=e28] [cursor=pointer]:
+        - /url: /watch
+      - link "About" [ref=e29] [cursor=pointer]:
+        - /url: /about
+      - link "Connect" [ref=e31] [cursor=pointer]:
+        - /url: /connect
+      - link "Foodbank" [ref=e32] [cursor=pointer]:
+        - /url: /foodbank
+      - link "Groups" [ref=e33] [cursor=pointer]:
+        - /url: /groups
+      - link "Serve" [ref=e34] [cursor=pointer]:
+        - /url: /serve
+      - link "Events" [ref=e35] [cursor=pointer]:
+        - /url: /events
+      - link "Give" [ref=e36] [cursor=pointer]:
+        - /url: /give
+    - generic [ref=e37]:
+      - link "▶ Watch Live" [ref=e38] [cursor=pointer]:
+        - /url: /watch?mode=live
+        - generic [ref=e39]: ▶
+        - text: Watch Live
+      - link "♡ Give" [ref=e40] [cursor=pointer]:
+        - /url: /give
+        - generic [ref=e41]: ♡
+        - text: Give
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - heading "Welcome to Team Church" [level=2] [ref=e46]
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: We’re a local church in Glasgow made up of people from all walks of life who gather to learn about Jesus, pray together, and support one another.
+            - paragraph [ref=e49]: Our heart is to create a place where people can experience God, build meaningful relationships, and grow in faith. Whether you’ve been part of church for years or you’re just curious and exploring, you are always welcome here.
+          - button "Learn More About Us" [ref=e50] [cursor=pointer]
+        - img "People gathered at church" [ref=e55]
+      - region [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - text: LATEST MESSAGES
+            - heading "Watch & Listen" [level=2] [ref=e61]
+          - link "View All Messages" [ref=e62] [cursor=pointer]:
+            - /url: /watch
+            - text: View All Messages
+            - generic [ref=e63]: →
+      - region [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e73]: GET CONNECTED
+          - heading "Take Your Next Step" [level=2] [ref=e74]
+          - paragraph [ref=e75]: Wherever you are in your journey, there’s a next step waiting for you.
+        - generic [ref=e76]:
+          - link [ref=e77] [cursor=pointer]:
+            - /url: /connect
+            - generic [ref=e81]:
+              - heading "New Here?" [level=3] [ref=e82]
+              - paragraph [ref=e83]: We’d love to meet you. Plan your first visit and see what to expect.
+            - generic [ref=e84]:
+              - text: Plan a Visit
+              - generic [ref=e85]: →
+          - link [ref=e86] [cursor=pointer]:
+            - /url: /groups
+            - generic [ref=e90]:
+              - heading "Join a Group" [level=3] [ref=e91]
+              - paragraph [ref=e92]: Connect with others in small groups that meet throughout the week.
+            - generic [ref=e93]:
+              - text: Find a Group
+              - generic [ref=e94]: →
+          - link [ref=e95] [cursor=pointer]:
+            - /url: /serve
+            - generic [ref=e99]:
+              - heading "Serve With Us" [level=3] [ref=e100]
+              - paragraph [ref=e101]: Use your gifts to make a difference. There’s a place for everyone.
+            - generic [ref=e102]:
+              - text: Get Involved
+              - generic [ref=e103]: →
+          - link [ref=e104] [cursor=pointer]:
+            - /url: /connect
+            - generic [ref=e108]:
+              - heading "Need Prayer?" [level=3] [ref=e109]
+              - paragraph [ref=e110]: We believe in the power of prayer. Let us pray with you and for you.
+            - generic [ref=e111]:
+              - text: Submit Request
+              - generic [ref=e112]: →
+  - contentinfo [ref=e113]:
+    - paragraph [ref=e114]: © 2026 Team Church Glasgow
+    - paragraph [ref=e115]:
+      - text: Website by
+      - link "Nathan Somevi" [ref=e116] [cursor=pointer]:
+        - /url: https://nathansomevi.dev

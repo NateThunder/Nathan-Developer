@@ -27,11 +27,10 @@ export function SiteFooter() {
                 START A PROJECT
               </p>
               <h2 className="mt-3 max-w-[24ch] text-balance text-3xl font-semibold tracking-[-0.02em] text-[var(--color-text)] sm:text-4xl">
-                Ready to build a website that performs like a product?
+                Ready for a website that brings in better enquiries?
               </h2>
               <p className="mt-4 max-w-[64ch] text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-                Share your goals and we will respond with a clear scope,
-                timeline, and next steps.
+                Professional websites from £1,500. Share your goals and we will respond with a clear scope, timeline, and next steps.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -54,14 +53,14 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-8 border-t-2 border-[var(--color-border)] pt-7 sm:mt-10 sm:pt-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-8 border-t-2 border-[var(--color-border)] pt-7 sm:mt-10 sm:pt-8 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <p className="text-base font-semibold text-[var(--color-text)]">
               Somevi Labs
             </p>
             <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">
-              Independent web designer and developer delivering clear strategy
-              and production-ready execution.
+              UK-wide web design for professional service businesses. Clear strategy,
+              credible design, and practical delivery.
             </p>
           </div>
 
@@ -100,42 +99,11 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <div>
-            <p className="text-sm font-semibold text-[var(--color-text)]">Social</p>
-            <ul className="mt-3 space-y-2 text-sm text-[var(--color-muted)]">
-              <li>
-                <a
-                  href="https://www.linkedin.com"
-                  className={`transition hover:text-[var(--color-text)] ${FOCUS_RING}`}
-                >
-                  LinkedIn
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://x.com"
-                  className={`transition hover:text-[var(--color-text)] ${FOCUS_RING}`}
-                >
-                  X / Twitter
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://dribbble.com"
-                  className={`transition hover:text-[var(--color-text)] ${FOCUS_RING}`}
-                >
-                  Dribbble
-                </a>
-              </li>
-            </ul>
-          </div>
-
         </div>
 
         <div className="mt-8 flex flex-col gap-2 border-t-2 border-[var(--color-border)] pt-6 text-sm text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between">
           <p>(c) {year} Somevi Labs. All rights reserved.</p>
           <p className="mono-label text-[10px] text-[var(--color-accent-warm)]">
-            {"// 8px grid rhythm / vector first / pixel accents"}
           </p>
         </div>
       </div>
